@@ -36,7 +36,7 @@ def run(path, prefix, trials, results):
             for t in range(trials):
                 print(f"Opening {fname} (trial {t + 1})")
                 wb = excel.Workbooks.Open(os.path.join(pathlib.Path.cwd() / path, fname))
-                collector.measure(normalizer=1e6)
+                collector.measure()
                 wb.Close()
 
             # Free resources
@@ -44,7 +44,7 @@ def run(path, prefix, trials, results):
             
             # Update results
             if rows not in results: results[rows] = {}
-            results[rows].update(collector.report(prefix=prefix, suffix=" (MB)"))
+            results[rows].update(collector.report(normalizer=1e6, smooth=True, prefix=prefix, suffix=" (MB)"))
 
             # Show results and clean up
             print(results[rows])

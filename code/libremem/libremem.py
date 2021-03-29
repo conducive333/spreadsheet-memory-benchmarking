@@ -29,18 +29,32 @@ def get_soffice_bin_mem():
 
     Returns:
     --------
-        A dictionary with the following keys:
-            Peak WSS    : The peak working set size in bytes
-            WSS         : The working set size in bytes
-            USS         : Unique set size in bytes
+        A dictionary of memory data.
     """
-    try:
-        memdata = psutil.Process(get_soffice_bin_pid()).memory_full_info()
-    except Exception as e:
-        # Sometimes the PID of soffice.bin will be reassigned in the middle of data
-        # collection and cause an exception. This try-except block should fix this.
-        memdata = psutil.Process(get_soffice_bin_pid()).memory_full_info()
-    return { "Peak WSS" : memdata.peak_wset, "WSS" : memdata.wset, "USS" : memdata.uss }
+    # Sometimes the PID of soffice.bin will be reassigned in the middle of data
+    # collection and cause an exception. This while block should fix this.
+    pid = [get_soffice_bin_pid()]
+    while len(pid) > 0:
+        try:
+            memdata = psutil.Process(pid.pop()).memory_full_info()
+        except Exception as e:
+            pid.append(get_soffice_bin_pid())
+        else:
+            return {
+                'nonpaged_pool'         : memdata.nonpaged_pool,
+                'num_page_faults'       : memdata.num_page_faults,
+                'paged_pool'            : memdata.paged_pool,
+                'pagefile'              : memdata.pagefile,
+                'peak_nonpaged_pool'    : memdata.peak_nonpaged_pool,
+                'peak_paged_pool'       : memdata.peak_paged_pool,
+                'peak_pagefile'         : memdata.peak_pagefile,
+                'peak_wset'             : memdata.peak_wset,
+                'private'               : memdata.private,
+                'rss'                   : memdata.rss,
+                'uss'                   : memdata.uss,
+                'vms'                   : memdata.vms,
+                'wset'                  : memdata.wset
+            }
 
 def measure_calc_mem(soffice_path, in_path, out_path, poll_seconds, prefix="", suffix=" (Bytes)", normalizer=1):
     """
@@ -103,7 +117,7 @@ def measure_calc_mem(soffice_path, in_path, out_path, poll_seconds, prefix="", s
         memdict[str(datetime.datetime.now().replace(microsecond=0))] = currmem.copy()
         print(file_name + ": " + str(currmem))
         time.sleep(poll_seconds)
-        if currmem["USS"] - prevmem["USS"] == 0:
+        if currmem["uss"] - prevmem["uss"] == 0:
             for _ in range(iterate):
                 currmem = get_soffice_bin_mem()
                 memdict[str(datetime.datetime.now().replace(microsecond=0))] = currmem

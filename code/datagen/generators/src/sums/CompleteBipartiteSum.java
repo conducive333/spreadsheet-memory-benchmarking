@@ -15,7 +15,25 @@ import java.util.Deque;
 import creator.Creatable;
 
 public class CompleteBipartiteSum implements Creatable {
-    
+    /**
+     * Creates a spreadsheet with the following structure:
+     * 
+     * 0    |   A   |       B       |
+     * ------------------------------
+     * 1    |   ?   |   =SUM(A1:AN) |
+     * 2    |   ?   |   =SUM(A1:AN) |
+     * ...  |   ... |   ...         |
+     * N    |   ?   |   =SUM(A1:AN) |
+     * 
+     * ? = a random value (or a placeholder value if no
+     * random seed is specified). The COLS parameter 
+     * controls the number of columns with values AND
+     * the number of columns with formulae. For example,
+     * if COLS = 2, then there will be 2 columns of values
+     * and 2 columns of formulae.
+     * 
+     */
+
     private static final double FILL_VALUE = 1.0;
 
     @Override

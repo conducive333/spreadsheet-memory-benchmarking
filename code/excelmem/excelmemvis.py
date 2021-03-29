@@ -36,7 +36,7 @@ def run(child_conn, path, trials, prefix, results):
             for t in range(trials):
                 child_conn.send(f"Opening {fname} (trial {t + 1})")
                 wb = excel.Workbooks.Open(os.path.join(pathlib.Path.cwd() / path, fname))
-                collector.measure(normalizer=1e6)
+                collector.measure()
                 wb.Close()
 
             # Free resources
@@ -44,7 +44,7 @@ def run(child_conn, path, trials, prefix, results):
             
             # Update results
             if rows not in results: results[rows] = {}
-            results[rows].update(collector.report(prefix=prefix, suffix=" (MB)"))
+            results[rows].update(collector.report(normalizer=1e6, smooth=True, prefix=prefix, suffix=" (MB)"))
 
             # Show results
             child_conn.send(results)

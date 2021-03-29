@@ -3,10 +3,14 @@ import java.util.concurrent.ExecutorService;
 import util.SimpleThreadPoolExecutor;
 import util.Stopwatch;
 
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Random;
 import java.io.File;
+
+import java.util.Properties;
+import java.util.Random;
 
 import creator.Creatable;
 import creator.Creator;
@@ -14,18 +18,43 @@ import sums.*;
 
 public class Main {
 
-    /** Edit zone: */
-    private static final Creatable  INST = new CompleteBipartiteSum();
-    private static final Path       PATH = Path.of("..", "exp");    
-    private static final String     FLDR = "RCBS-1col-xlsx";
-    private static final Random     RAND = new Random(42L);
-    private static final boolean    XLSX = true;
-    private static final int        STEP = 10000;
-    private static final int        ROWS = 0;
-    private static final int        COLS = 1;
-    private static final int        ITER = 10;
-    private static       int        POOL = 5;
-    /***************/
+    private static Creatable  INST;
+    private static Path       PATH;    
+    private static String     FLDR;
+    private static Random     RAND;
+    private static boolean    XLSX;
+    private static int        STEP;
+    private static int        ROWS;
+    private static int        COLS;
+    private static int        ITER;
+    private static int        POOL;
+
+    static {
+        try {
+            FileInputStream in  = new FileInputStream("config");
+            Properties      pr  = new Properties();
+            pr.load(in);
+            INST = Main.resolveName(pr.getProperty("INST"));
+            PATH = Path.of(pr.getProperty("PATH"));
+            FLDR = pr.getProperty("FLDR");
+            RAND = pr.getProperty("RAND") == "" ? null : new Random(Long.parseLong(pr.getProperty("RAND")));
+            XLSX = Boolean.parseBoolean(pr.getProperty("XLSX"));
+            STEP = Integer.parseInt(pr.getProperty("STEP"));
+            ROWS = Integer.parseInt(pr.getProperty("ROWS"));
+            COLS = Integer.parseInt(pr.getProperty("COLS"));
+            ITER = Integer.parseInt(pr.getProperty("ITER"));
+            POOL = Integer.parseInt(pr.getProperty("POOL"));
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Creatable resolveName (String s) {
+        if (s.equals("CompleteBipartiteSum"))    return new CompleteBipartiteSum();
+        if (s.equals("SingleCellSum"))           return new SingleCellSum();
+        return null;
+    }
 
     private static String[] createDirectories () {
         File vDir = Path.of(Main.PATH.toString(), Main.FLDR, "value-only"   ).toFile();
