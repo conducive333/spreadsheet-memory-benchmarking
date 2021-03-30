@@ -1,7 +1,7 @@
 # LibreOffice Memory Benchmarking
 
 ## Table of Contents:
-- `libremem.py`
+- `mem.py`
 
     - Takes in the following parameters as input:
 
@@ -9,12 +9,11 @@
             ```
             <prefix>-<size>.ods
             ```
+        - `OUTPUT_PATH` : Specifies where to dump the output of the script
         - `FV_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`)
         - `VO_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`)
-        - `OUTPUT_PATH` : The path to a directory where all experimental folders will be created
-        - `OUTDIR_NAME` : The name of the directory to write results to (overwites any existing file(s) with the same name without warning)
         - `POLLSECONDS` : The minimum number of seconds to wait before collecting another memory measurement
-        - `SOFFICE_PATH`: The absolute path to soffice
+        - `SOFFICEPATH` : The absolute path to soffice
     
     - Outputs:
     
@@ -54,4 +53,4 @@
             } 
             ```
 
-- `librememvis.py`     : Same as `libremem.py`, but modified so that it may be called from a jupyter notebook.
+- `memvis.py` : Same as `mem.py`, but modified so that it may be called from a jupyter notebook.

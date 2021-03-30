@@ -181,11 +181,14 @@ def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
 
 if __name__ == "__main__":
 
-    # The absolute path to soffice
-    SOFFICE_PATH = "C:/Program Files/LibreOffice/program/soffice"
+    # Stores the absolute path to the project's root directory
+    ROOT_DIR = pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.absolute()
 
-    # A directory with at least two folders of experimental Calc files
-    INPUTS_PATH = os.path.join("..", "..", "exp")
+    # A directory with at least two folders of experimental Excel files
+    INPUTS_PATH = os.path.join(ROOT_DIR, "input-data", "rscs-test")
+
+    # Specifies where to dump the output of the script
+    OUTPUT_PATH = os.path.join(ROOT_DIR, "results", "libtest")
 
     # The name of the folder with formula-value datasets (assumed to be inside INPUTS_PATH)
     FV_INPUTDIR = "formula-value"
@@ -193,31 +196,27 @@ if __name__ == "__main__":
     # The name of the folder with formula-value datasets (assumed to be inside INPUTS_PATH)
     VO_INPUTDIR = "value-only"
 
-    # The path to a directory where all experimental folders will be created
-    OUTPUT_PATH = os.path.join("..", "results")
-
-    # The name of the directory to write results to (overwites any existing file(s) with the same name without warning)
-    OUTDIR_NAME = "test"
-
     # The minimum number of seconds to wait before polling the task manager for memory metrics
     POLLSECONDS = 1
+
+    # The absolute path to soffice
+    SOFFICEPATH = "C:/Program Files/LibreOffice/program/soffice"
 
     # Ensures Calc is fully terminated before starting
     subprocess.call(["taskkill", "/f", "/im", "soffice.exe"], stderr=subprocess.DEVNULL)
 
     # Create fancy directory structure
-    output_fldr = os.path.join(OUTPUT_PATH, OUTDIR_NAME)
-    vo_memcurve = os.path.join(output_fldr, "vo-mem-curve")
-    fv_memcurve = os.path.join(output_fldr, "fv-mem-curve")
-    if not os.path.exists(output_fldr): os.makedirs(output_fldr)
+    vo_memcurve = os.path.join(OUTPUT_PATH, "vo-mem-curve")
+    fv_memcurve = os.path.join(OUTPUT_PATH, "fv-mem-curve")
+    if not os.path.exists(OUTPUT_PATH): os.makedirs(OUTPUT_PATH)
     if not os.path.exists(vo_memcurve): os.makedirs(vo_memcurve)
     if not os.path.exists(fv_memcurve): os.makedirs(fv_memcurve)
 
     # Run experiments
     results = {}
     exptime = datetime.datetime.now()
-    run(SOFFICE_PATH, os.path.join(INPUTS_PATH, VO_INPUTDIR), vo_memcurve, POLLSECONDS, "Value "  , results)
-    run(SOFFICE_PATH, os.path.join(INPUTS_PATH, FV_INPUTDIR), fv_memcurve, POLLSECONDS, "Formula ", results)
+    run(SOFFICEPATH, os.path.join(INPUTS_PATH, VO_INPUTDIR), vo_memcurve, POLLSECONDS, "Value "  , results)
+    run(SOFFICEPATH, os.path.join(INPUTS_PATH, FV_INPUTDIR), fv_memcurve, POLLSECONDS, "Formula ", results)
 
     # Report timing stats
     exptime = (datetime.datetime.now() - exptime).total_seconds()
@@ -231,4 +230,4 @@ if __name__ == "__main__":
     results = pandas.DataFrame.from_dict(results, orient="index")
     results.index.rename("Rows", inplace=True)
     results.sort_index(inplace=True)
-    results.to_excel(os.path.join(output_fldr, "memory.xlsx"))
+    results.to_excel(os.path.join(OUTPUT_PATH, "memory.xlsx"))

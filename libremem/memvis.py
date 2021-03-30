@@ -192,12 +192,11 @@ def run(child_conn, soffice_path, in_path, out_path, poll_seconds, prefix, resul
 
 def main(child_conn
     , inputs_path
+    , output_path
     , fv_inputdir="formula-value"
     , vo_inputdir="value-only"
-    , output_path="results"
-    , outdir_name="test"
     , pollseconds=1
-    , soffice_path="C:/Program Files/LibreOffice/program/soffice"):
+    , sofficepath="C:/Program Files/LibreOffice/program/soffice"):
 
     if child_conn is not None:
         
@@ -207,18 +206,17 @@ def main(child_conn
             subprocess.call(["taskkill", "/f", "/im", "soffice.exe"], stderr=subprocess.DEVNULL)
 
             # Create fancy directory structure
-            output_fldr = os.path.join(output_path, outdir_name)
-            vo_memcurve = os.path.join(output_fldr, "vo-mem-curve")
-            fv_memcurve = os.path.join(output_fldr, "fv-mem-curve")
-            if not os.path.exists(output_fldr): os.makedirs(output_fldr)
+            vo_memcurve = os.path.join(output_path, "vo-mem-curve")
+            fv_memcurve = os.path.join(output_path, "fv-mem-curve")
+            if not os.path.exists(output_path): os.makedirs(output_path)
             if not os.path.exists(vo_memcurve): os.makedirs(vo_memcurve)
             if not os.path.exists(fv_memcurve): os.makedirs(fv_memcurve)
 
             # Run experiments
             results = {}
             exptime = datetime.datetime.now()
-            run(child_conn, soffice_path, os.path.join(inputs_path, vo_inputdir), vo_memcurve, pollseconds, "Value "  , results)
-            run(child_conn, soffice_path, os.path.join(inputs_path, fv_inputdir), fv_memcurve, pollseconds, "Formula ", results)
+            run(child_conn, sofficepath, os.path.join(inputs_path, vo_inputdir), vo_memcurve, pollseconds, "Value "  , results)
+            run(child_conn, sofficepath, os.path.join(inputs_path, fv_inputdir), fv_memcurve, pollseconds, "Formula ", results)
 
             # Report timing stats
             exptime = (datetime.datetime.now() - exptime).total_seconds()
@@ -232,7 +230,7 @@ def main(child_conn
             results = pandas.DataFrame.from_dict(results, orient="index")
             results.index.rename("Rows", inplace=True)
             results.sort_index(inplace=True)
-            results.to_excel(os.path.join(output_fldr, "memory.xlsx"))
+            results.to_excel(os.path.join(output_path, "memory.xlsx"))
 
         except Exception as e:
 

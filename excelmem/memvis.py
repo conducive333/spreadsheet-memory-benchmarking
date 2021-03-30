@@ -2,14 +2,13 @@ import win32com.client
 import subprocess
 import traceback
 import datetime
+import memdata
 import pathlib
 import random
 import pandas
 import time
 import sys
 import os
-
-from . import memdata
 
 # Benchmark all .xlsx files in path
 def run(child_conn, path, trials, prefix, results):
@@ -63,11 +62,10 @@ def run(child_conn, path, trials, prefix, results):
 
 def main(child_conn
     , inputs_path
+    , output_path
     , fv_inputdir="formula-value"
     , vo_inputdir="value-only"
-    , output_path="results"
-    , outdir_name="test"
-    , trials=5):
+    , totl_trials=5):
 
     if child_conn is not None:
         
@@ -77,15 +75,14 @@ def main(child_conn
             child_conn.send("Closing all running instances of EXCEL.EXE (if any)")
             subprocess.call(["taskkill", "/f", "/im", "EXCEL.EXE"], stderr=subprocess.DEVNULL)
 
-            # Create fancy directory structure
-            output_fldr = os.path.join(output_path, outdir_name)
-            if not os.path.exists(output_fldr): os.makedirs(output_fldr)
+            # Create directories
+            if not os.path.exists(output_path): os.makedirs(output_path)
 
             # Run experiments
-            results = dict()                                                                        # Container for experimental results        
-            exptime = datetime.datetime.now()                                                       # Start time
-            run(child_conn, os.path.join(inputs_path, vo_inputdir), trials, "Value "  , results)    # Run value-only experiments
-            run(child_conn, os.path.join(inputs_path, fv_inputdir), trials, "Formula ", results)    # Run formula-value experiments
+            results = dict()                                                                            # Container for experimental results        
+            exptime = datetime.datetime.now()                                                           # Start time
+            run(child_conn, os.path.join(inputs_path, vo_inputdir), totl_trials, "Value "  , results)   # Run value-only experiments
+            run(child_conn, os.path.join(inputs_path, fv_inputdir), totl_trials, "Formula ", results)   # Run formula-value experiments
             
             # Report timing stats
             exptime = (datetime.datetime.now() - exptime).total_seconds()
@@ -99,7 +96,7 @@ def main(child_conn
             results = pandas.DataFrame.from_dict(results, orient="index")
             results.index.rename("Rows", inplace=True)
             results.sort_index(inplace=True)
-            results.to_excel(os.path.join(output_fldr, "memory.xlsx"))
+            results.to_excel(os.path.join(output_path, "memory.xlsx"))
 
         except Exception as e:
 

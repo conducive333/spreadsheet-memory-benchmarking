@@ -2,14 +2,13 @@ import win32com.client
 import subprocess
 import traceback
 import datetime
+import memdata
 import pathlib
 import random
 import pandas
 import time
 import sys
 import os
-
-from . import memdata
 
 # Benchmark all .xlsx files in path
 def run(path, prefix, trials, results):
@@ -62,37 +61,36 @@ def run(path, prefix, trials, results):
 
 if __name__ == "__main__":
 
+    # Stores the absolute path to the project's root directory
+    ROOT_DIR = pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.absolute()
+
     # A directory with at least two folders of experimental Excel files
-    INPUTS_PATH = os.path.join("..", "..", "exp")
+    INPUTS_PATH = os.path.join(ROOT_DIR, "input-data", "rscs-test")
+
+    # The path to the output directory
+    OUTPUT_PATH = os.path.join(ROOT_DIR, "results")
 
     # The name of the folder with formula-value datasets (assumed to be inside INPUTS_PATH)
     FV_INPUTDIR = "formula-value"
 
     # The name of the folder with formula-value datasets (assumed to be inside INPUTS_PATH)
     VO_INPUTDIR = "value-only"
-
-    # The path to a directory where all experimental folders will be created
-    OUTPUT_PATH = os.path.join("..", "results")
-
-    # The name of the directory to write results to (overwites any existing file(s) with the same name without warning)
-    OUTDIR_NAME = "test"
-
-    # Number of trials to perform for each run
-    TRIALS = 5
+    
+    # The number of trials to perform for each run
+    TOTL_TRIALS = 1
 
     # Ensures Excel is fully terminated before starting
     print("Closing all running instances of EXCEL.EXE (if any)")
     subprocess.call(["taskkill", "/f", "/im", "EXCEL.EXE"], stderr=subprocess.DEVNULL)
 
-    # Create fancy directory structure
-    output_fldr = os.path.join(OUTPUT_PATH, OUTDIR_NAME)
-    if not os.path.exists(output_fldr): os.makedirs(output_fldr)
+    # Create directories
+    if not os.path.exists(OUTPUT_PATH): os.makedirs(OUTPUT_PATH)
 
     # Run Experiments
-    results = dict()                                                # Container for experimental results        
-    exptime = datetime.datetime.now()                               # Start time
-    run(os.path.join(INPUTS_PATH, VO_INPUTDIR), "Value "  , TRIALS, results)  # Run value-only experiments
-    run(os.path.join(INPUTS_PATH, FV_INPUTDIR), "Formula ", TRIALS, results)  # Run formula-value experiments
+    results = dict()                                                                # Container for experimental results        
+    exptime = datetime.datetime.now()                                               # Start time
+    run(os.path.join(INPUTS_PATH, VO_INPUTDIR), "Value "  , TOTL_TRIALS, results)   # Run value-only experiments
+    run(os.path.join(INPUTS_PATH, FV_INPUTDIR), "Formula ", TOTL_TRIALS, results)   # Run formula-value experiments
 
     # Report timing stats
     exptime = (datetime.datetime.now() - exptime).total_seconds()
@@ -106,5 +104,5 @@ if __name__ == "__main__":
     results = pandas.DataFrame.from_dict(results, orient="index")
     results.index.rename("Rows", inplace=True)
     results.sort_index(inplace=True)
-    results.to_excel(os.path.join(output_fldr, "memory.xlsx"))
+    results.to_excel(os.path.join(OUTPUT_PATH, "memory.xlsx"))
     

@@ -1,7 +1,7 @@
 # Excel Memory Benchmarking
 
 ## Table of Contents:
-- `excelmem.py`
+- `mem.py`
 
     - Takes in the following parameters as input:
 
@@ -9,11 +9,10 @@
             ```
             <prefix>-<size>.xlsx
             ```
+        - `OUTPUT_PATH` : Specifies where to dump the output of the script
         - `FV_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`)
         - `VO_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`)
-        - `OUTPUT_PATH` : The path to a directory where all experimental folders will be created
-        - `OUTDIR_NAME` : The name of the directory to write results to (overwites any existing file(s) with the same name without warning)
-        - `TRIALS`      : Number of trials to perform for each run
+        - `TOTL_TRIALS` : The number of trials to perform for each run
     
     - Outputs an excel file called `memory.xlsx` with the following memory measurements (in megabytes) for both formula-value and value-only spreadsheets:
 
@@ -32,6 +31,6 @@
 
         See the [PROCESS_MEMORY_COUNTERS_EX](https://docs.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex) structure doc for more detailed explanations.
 
-- `excelmemvis.py`     : Same as `excelmem.py`, but modified so that it may be called from a jupyter notebook.
+- `memvis.py`   : Same as `mem.py`, but modified so that it may be called from a jupyter notebook.
 
-- `memdata.py`         : A helper class for collecting memory measurements.
+- `memdata.py`  : A helper class for collecting memory measurements.
