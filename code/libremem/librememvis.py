@@ -32,7 +32,7 @@ def get_soffice_bin_mem():
         A dictionary of memory data.
     """
     # Sometimes the PID of soffice.bin will be reassigned in the middle of data
-    # collection and cause an exception. This while block should fix this.
+    # collection and cause an exception. The while loop below should fix this.
     pid = [get_soffice_bin_pid()]
     while len(pid) > 0:
         try:
@@ -41,19 +41,18 @@ def get_soffice_bin_mem():
             pid.append(get_soffice_bin_pid())
         else:
             return {
-                'nonpaged_pool'         : memdata.nonpaged_pool,
-                'num_page_faults'       : memdata.num_page_faults,
-                'paged_pool'            : memdata.paged_pool,
-                'pagefile'              : memdata.pagefile,
                 'peak_nonpaged_pool'    : memdata.peak_nonpaged_pool,
                 'peak_paged_pool'       : memdata.peak_paged_pool,
                 'peak_pagefile'         : memdata.peak_pagefile,
+                'nonpaged_pool'         : memdata.nonpaged_pool,
+                'paged_pool'            : memdata.paged_pool,
                 'peak_wset'             : memdata.peak_wset,
+                'pagefile'              : memdata.pagefile,
                 'private'               : memdata.private,
+                'wset'                  : memdata.wset,
                 'rss'                   : memdata.rss,
                 'uss'                   : memdata.uss,
-                'vms'                   : memdata.vms,
-                'wset'                  : memdata.wset
+                'vms'                   : memdata.vms
             }
 
 def measure_calc_mem(child_conn, soffice_path, in_path, out_path, poll_seconds, prefix="", suffix=" (Bytes)", normalizer=1):

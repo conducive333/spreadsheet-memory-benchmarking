@@ -18,22 +18,38 @@
     
     - Outputs:
     
-        - An excel file called `memory.xlsx` with the following schema:
-            - `Rows` : The number of rows in the file
-            - `Value Peak WSS (MB)` : The peak working set size in megabytes for value-only spreadsheets
-            - `Value WSS (MB)`  : The working set size in megabytes for value-only spreadsheets
-            - `Value USS (MB)`  : The unique set size in megabytes for value-only spreadsheets
-            - `Formula Peak WSS (MB)` : The peak working set size in megabytes for formula-value spreadsheets
-            - `Formula WSS (MB)` : The working set size in megabytes for formula-value spreadsheets
-            - `Formula USS (MB)` : The unique set size in megabytes for formula-value spreadsheets
+        - An excel file called `memory.xlsx` with the following memory measurements (in megabytes) for both formula-value and value-only spreadsheets:
+            - `peak_nonpaged_pool`  : The peak nonpaged pool usage
+            - `peak_paged_pool`     : The peak paged pool usage
+            - `peak_pagefile`       : The peak value in bytes of the Commit Charge during the lifetime of this process
+            - `nonpaged_pool`       : The nonpaged pool usage
+            - `paged_pool`          : The paged pool usage
+            - `peak_wset`           : The peak working set size
+            - `pagefile`            : The Commit Charge value
+            - `private`             : Same as `pagefile`
+            - `wset`                : The working set size
+            - `rss`                 : The resident set size
+            - `uss`                 : The unique set size
+            - `vms`                 : The virtual memory size
+
+             See the [PROCESS_MEMORY_COUNTERS_EX](https://docs.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex) structure doc for more detailed explanations.
         
         - Two directories, `fv-mem-curve` and `vo-mem-curve`, that contain JSON files. Each JSON file has the following format:
             ```
             { <timestamp> : 
               {
-                'Peak WSS' : Peak working set size in bytes,
-                'WSS' : Working set size in bytes,
-                'USS' : Unique set size in bytes,
+                peak_nonpaged_pool  : <value in bytes>
+                peak_paged_pool     : <value in bytes>
+                peak_pagefile       : <value in bytes>
+                nonpaged_pool       : <value in bytes>
+                paged_pool          : <value in bytes>
+                peak_wset           : <value in bytes>
+                pagefile            : <value in bytes>
+                private             : <value in bytes>
+                wset                : <value in bytes>
+                rss                 : <value in bytes>
+                uss                 : <value in bytes>
+                vms                 : <value in bytes>
               }
             } 
             ```

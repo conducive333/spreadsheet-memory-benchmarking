@@ -15,15 +15,22 @@
         - `OUTDIR_NAME` : The name of the directory to write results to (overwites any existing file(s) with the same name without warning)
         - `TRIALS`      : Number of trials to perform for each run
     
-    - Outputs an excel file called `memory.xlsx` with the following schema:
+    - Outputs an excel file called `memory.xlsx` with the following memory measurements (in megabytes) for both formula-value and value-only spreadsheets:
 
-        - `Rows` : The number of rows in the file
-        - `Value Peak WSS (MB)` : The peak working set size in megabytes for value-only spreadsheets
-        - `Value WSS (MB)`  : The working set size in megabytes for value-only spreadsheets
-        - `Value USS (MB)`  : The unique set size in megabytes for value-only spreadsheets
-        - `Formula Peak WSS (MB)` : The peak working set size in megabytes for formula-value spreadsheets
-        - `Formula WSS (MB)` : The working set size in megabytes for formula-value spreadsheets
-        - `Formula USS (MB)` : The unique set size in megabytes for formula-value spreadsheets
+        - `peak_nonpaged_pool`  : The peak nonpaged pool usage
+        - `peak_paged_pool`     : The peak paged pool usage
+        - `peak_pagefile`       : The peak value in bytes of the Commit Charge during the lifetime of this process
+        - `nonpaged_pool`       : The nonpaged pool usage
+        - `paged_pool`          : The paged pool usage
+        - `peak_wset`           : The peak working set size
+        - `pagefile`            : The Commit Charge value
+        - `private`             : Same as `pagefile`
+        - `wset`                : The working set size
+        - `rss`                 : The resident set size
+        - `uss`                 : The unique set size
+        - `vms`                 : The virtual memory size
+
+        See the [PROCESS_MEMORY_COUNTERS_EX](https://docs.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters_ex) structure doc for more detailed explanations.
 
 - `excelmemvis.py`     : Same as `excelmem.py`, but modified so that it may be called from a jupyter notebook.
 

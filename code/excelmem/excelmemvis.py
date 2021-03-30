@@ -44,7 +44,7 @@ def run(child_conn, path, trials, prefix, results):
             
             # Update results
             if rows not in results: results[rows] = {}
-            results[rows].update(collector.report(normalizer=1e6, smooth=True, prefix=prefix, suffix=" (MB)"))
+            results[rows].update(collector.report(smooth=True, prefix=prefix, suffix=" (MB)", normalizer=1e6))
 
             # Show results
             child_conn.send(results)

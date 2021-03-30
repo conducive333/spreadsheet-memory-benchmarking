@@ -14,7 +14,7 @@
     - `RAND`  : The seed to use when generating random values. If left empty, then sheets will be filled with the same placeholder value (currently set to 1).
     - `XLSX`  : If true, creates `.xlsx` spreadsheets. Otherwise, creates `.ods` spreadsheets.
     - `STEP`  : The number of rows to increment by on the next iteration.
-    - `ROWS`  : The number of rows to create.
+    - `ROWS`  : The starting number of rows.
     - `COLS`  : The number of columns to create.
     - `ITER`  : The number of iterations to perform.
     - `POOL`  : The number of threads to use. If set to 1, then the main thread will be used (i.e. no multithreading).

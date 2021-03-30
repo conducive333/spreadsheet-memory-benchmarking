@@ -7,19 +7,18 @@ import numpy
 class ExcelMemDataCollector:
 
     TITLES = [
-        'nonpaged_pool',
-        'num_page_faults',
-        'paged_pool',
-        'pagefile',
         'peak_nonpaged_pool',
         'peak_paged_pool',
         'peak_pagefile',
+        'nonpaged_pool',
+        'paged_pool',
         'peak_wset',
+        'pagefile',
         'private',
+        'wset',
         'rss',
         'uss',
-        'vms',
-        'wset'
+        'vms'
     ]
 
     def __init__(self, excel):
@@ -39,22 +38,22 @@ class ExcelMemDataCollector:
 
         # Collect metrics of interest (default unit is bytes)
         self.tot_mem = numpy.add(self.tot_mem, meminfo)
-        self.max_mem = numpy.max(self.max_mem, meminfo)
-        self.min_mem = numpy.min(self.min_mem, meminfo)
+        self.max_mem = numpy.maximum(self.max_mem, meminfo)
+        self.min_mem = numpy.minimum(self.min_mem, meminfo)
 
         # Clean up
         self.count += 1
 
-    def report(self, normalizer=1, smooth=True, prefix="", suffix=""):
+    def report(self, smooth=True, prefix="", suffix="", normalizer=1):
         if smooth and self.count >= 3:
             aggregated = ((self.tot_mem - self.min_mem - self.max_mem) / (self.count - 2)) / normalizer
             return { prefix + t + suffix : v for t, v in zip(ExcelMemDataCollector.TITLES, aggregated) }
         else:
             if self.count != 0:
                 aggregated = (self.tot_mem / self.count) / normalizer
-                return { prefix + t + suffix : v for t, v in zip(ExcelMemDataCollector.TITLES, self.tot_mem) }
+                return { prefix + t + suffix : v for t, v in zip(ExcelMemDataCollector.TITLES, aggregated) }
             else:
-                return { prefix + t + suffix : None for t, v in zip(ExcelMemDataCollector.TITLES, self.tot_mem) }
+                return { prefix + t + suffix : None for t in ExcelMemDataCollector.TITLES }
     
     def close_handle(self):
         self.handl.close()
