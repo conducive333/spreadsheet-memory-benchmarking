@@ -55,13 +55,16 @@ def get_soffice_bin_mem():
                 'vms'                   : memdata.vms
             }
 
-def measure_calc_mem(soffice_path, in_path, out_path, poll_seconds, prefix="", suffix=" (Bytes)", normalizer=1):
+def measure_calc_mem(child_conn, soffice_path, in_path, out_path, poll_seconds, prefix="", suffix=" (Bytes)", normalizer=1):
     """
     Measures the memory consumption of the Calc file specified by `in_path`.
-    All measurements are in bytes.
 
-    Parameter(s):
-    -------------
+    Parameters:
+    -----------
+        child_conn : multiprocessing.Connection
+            A multiprocessing.Connection object for communicating with
+            the parent process.
+
         soffice_path : str
             The absolute path to soffice.
 
@@ -110,17 +113,17 @@ def measure_calc_mem(soffice_path, in_path, out_path, poll_seconds, prefix="", s
     while True:
         prevmem = get_soffice_bin_mem()
         memdict[str(datetime.datetime.now().replace(microsecond=0))] = prevmem.copy()
-        print(file_name + ": " + str(prevmem))
+        child_conn.send(file_name + ": " + str(prevmem))
         time.sleep(poll_seconds)
         currmem = get_soffice_bin_mem()
         memdict[str(datetime.datetime.now().replace(microsecond=0))] = currmem.copy()
-        print(file_name + ": " + str(currmem))
+        child_conn.send(file_name + ": " + str(currmem))
         time.sleep(poll_seconds)
         if currmem["uss"] - prevmem["uss"] == 0:
             for _ in range(iterate):
                 currmem = get_soffice_bin_mem()
                 memdict[str(datetime.datetime.now().replace(microsecond=0))] = currmem
-                print(file_name + ": " + str(currmem))
+                child_conn.send(file_name + ": " + str(currmem))
                 time.sleep(poll_seconds)
             break
 
@@ -137,13 +140,16 @@ def measure_calc_mem(soffice_path, in_path, out_path, poll_seconds, prefix="", s
     # Return the last memory measurement
     return { prefix + k + suffix : v / normalizer for k, v in next(reversed(memdict.values())).items() }
 
-def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
+def run(child_conn, soffice_path, in_path, out_path, poll_seconds, prefix, results):
     """
     Measures the memory consumption of all Calc files in `path`.
-    All measurements are in bytes.
 
-    Parameter(s):
-    -------------
+    Parameters:
+    -----------
+        child_conn : multiprocessing.Connection
+            A multiprocessing.Connection object for communicating
+            with the parent process.
+
         soffice_path : str
             The absolute path to soffice.
 
@@ -163,8 +169,7 @@ def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
             returned by `get_soffice_bin_mem()`.
         
         results : dict
-            A dictionary to store the final memory measurements 
-            in.
+            A dictionary to store the final memory measurements in.
     """
     pairs = [(f, int(f[f.index('-')+1:f.index('.')])) for f in os.listdir(in_path) if f.endswith(".ods")]
     random.shuffle(pairs)
@@ -172,7 +177,9 @@ def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
         time.sleep(0.5)
         if rows not in results: results[rows] = {}
         results[rows].update(
-            measure_calc_mem(soffice_path
+            measure_calc_mem(
+                child_conn
+                , soffice_path
                 , os.path.join(in_path, fname)
                 , os.path.join(out_path, fname.replace('.ods', '.json'))
                 , poll_seconds
@@ -181,40 +188,57 @@ def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
                 , normalizer=1e6
             )
         )
+        child_conn.send(results)
 
-def main(inputs_path
+def main(child_conn
+    , inputs_path
     , output_path
     , fv_inputdir="formula-value"
     , vo_inputdir="value-only"
     , pollseconds=1
     , sofficepath="C:/Program Files/LibreOffice/program/soffice"):
 
-    # Ensures Calc is fully terminated before starting
-    subprocess.call(["taskkill", "/f", "/im", "soffice.exe"], stderr=subprocess.DEVNULL)
+    if child_conn is not None:
+        
+        try:
 
-    # Create fancy directory structure
-    vo_memcurve = os.path.join(output_path, "vo-mem-curve")
-    fv_memcurve = os.path.join(output_path, "fv-mem-curve")
-    if not os.path.exists(output_path): os.makedirs(output_path)
-    if not os.path.exists(vo_memcurve): os.makedirs(vo_memcurve)
-    if not os.path.exists(fv_memcurve): os.makedirs(fv_memcurve)
+            # Ensures Calc is fully terminated before starting
+            subprocess.call(["taskkill", "/f", "/im", "soffice.exe"], stderr=subprocess.DEVNULL)
 
-    # Run experiments
-    results = {}
-    exptime = datetime.datetime.now()
-    run(sofficepath, os.path.join(inputs_path, vo_inputdir), vo_memcurve, pollseconds, "Value "  , results)
-    run(sofficepath, os.path.join(inputs_path, fv_inputdir), fv_memcurve, pollseconds, "Formula ", results)
+            # Create fancy directory structure
+            vo_memcurve = os.path.join(output_path, "vo-mem-curve")
+            fv_memcurve = os.path.join(output_path, "fv-mem-curve")
+            if not os.path.exists(output_path): os.makedirs(output_path)
+            if not os.path.exists(vo_memcurve): os.makedirs(vo_memcurve)
+            if not os.path.exists(fv_memcurve): os.makedirs(fv_memcurve)
 
-    # Report timing stats
-    exptime = (datetime.datetime.now() - exptime).total_seconds()
-    print("\nTotal time (HH:MM:SS): {:02}:{:02}:{:02}".format(
-        int(exptime // 3600), 
-        int(exptime % 3600 // 60), 
-        int(exptime % 60)
-    ))
+            # Run experiments
+            results = {}
+            exptime = datetime.datetime.now()
+            run(child_conn, sofficepath, os.path.join(inputs_path, vo_inputdir), vo_memcurve, pollseconds, "Value "  , results)
+            run(child_conn, sofficepath, os.path.join(inputs_path, fv_inputdir), fv_memcurve, pollseconds, "Formula ", results)
 
-    # Write results to an Excel file
-    results = pandas.DataFrame.from_dict(results, orient="index")
-    results.index.rename("Rows", inplace=True)
-    results.sort_index(inplace=True)
-    results.to_excel(os.path.join(output_path, "memory.xlsx"))
+            # Report timing stats
+            exptime = (datetime.datetime.now() - exptime).total_seconds()
+            child_conn.send("\nTotal time (HH:MM:SS): {:02}:{:02}:{:02}".format(
+                int(exptime // 3600), 
+                int(exptime % 3600 // 60), 
+                int(exptime % 60)
+            ))
+
+            # Write results to an Excel file
+            results = pandas.DataFrame.from_dict(results, orient="index")
+            results.index.rename("Rows", inplace=True)
+            results.sort_index(inplace=True)
+            results.to_excel(os.path.join(output_path, "memory.xlsx"))
+
+        except Exception as e:
+
+            # Send any errors as strings to the parent process
+            child_conn.send(str(e))
+
+        finally:
+        
+            # Pipe clean up
+            child_conn.send(None)
+            child_conn.close()

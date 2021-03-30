@@ -10,8 +10,29 @@ import time
 import sys
 import os
 
-# Benchmark all .xlsx files in path
 def run(child_conn, path, trials, prefix, results):
+    """
+    Measures the memory consumption of all .xlsx files specified by `path`.
+
+    Parameters:
+    -----------
+        child_conn : multiprocessing.Connection
+            A multiprocessing.Connection object for communicating with
+            the parent process.
+        
+        path : path-like
+            The path to a directory of benchmarking files.
+        
+        trials : int
+            The number of trials to perform.
+
+        prefix : str
+            This will be prepended to the keys of the dictionary 
+            returned by `psutil.memory_full_info()`.
+
+        results : dict
+            A dictionary to store the final memory measurements in.
+    """
 
     # Collect and shuffle input files
     pairs = [(f, int(f[f.index('-')+1:f.index('.')])) for f in os.listdir(path) if f.endswith(".xlsx")]

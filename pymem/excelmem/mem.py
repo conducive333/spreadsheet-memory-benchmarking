@@ -10,9 +10,26 @@ import time
 import sys
 import os
 
-# Benchmark all .xlsx files in path
 def run(path, trials, prefix, results):
-    
+    """
+    Measures the memory consumption of all .xlsx files specified by `path`.
+
+    Parameters:
+    -----------        
+        path : path-like
+            The path to a directory of benchmarking files.
+        
+        trials : int
+            The number of trials to perform.
+
+        prefix : str
+            This will be prepended to the keys of the dictionary 
+            returned by `psutil.memory_full_info()`.
+
+        results : dict
+            A dictionary to store the final memory measurements in.
+    """
+
     # Collect and shuffle input files
     pairs = [(f, int(f[f.index('-')+1:f.index('.')])) for f in os.listdir(path) if f.endswith(".xlsx")]
     random.shuffle(pairs)
