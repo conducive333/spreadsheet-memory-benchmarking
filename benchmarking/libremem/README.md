@@ -9,11 +9,11 @@
             ```
             <prefix>-<size>.ods
             ```
-        - `OUTPUT_PATH` : Specifies where to dump the output of the script
-        - `FV_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`)
-        - `VO_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`)
-        - `POLLSECONDS` : The minimum number of seconds to wait before collecting another memory measurement
-        - `SOFFICEPATH` : The absolute path to soffice
+        - `OUTPUT_PATH` : Specifies where to dump the output of the script.
+        - `FV_INPUTDIR` : The name of the folder with formula-value datasets (assumed to be inside `INPUTS_PATH`).
+        - `VO_INPUTDIR` : The name of the folder with value-only datasets (assumed to be inside `INPUTS_PATH`).
+        - `POLLSECONDS` : The minimum number of seconds to wait before collecting another memory measurement.
+        - `SOFFICEPATH` : The absolute path to soffice.
     
     - Outputs:
     
@@ -53,4 +53,5 @@
             } 
             ```
 
-- `memvis.py` : Same as `mem.py`, but modified so that it may communicate intermediate results to a jupyter notebook.
+- `memvis.py`
+  - Same as `mem.py`, but modified so that it may communicate intermediate results to a jupyter notebook.

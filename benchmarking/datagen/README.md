@@ -18,7 +18,7 @@
     - `ITER`  : The number of iterations to perform.
     - `POOL`  : The number of threads to use. If set to 1, then the main thread will be used (i.e. no multithreading).
 
-2. Run the script from `Main.java`
+2. Run the script from `Main.java`.
 
 ## Sample `config` file:
 ```

@@ -11,10 +11,12 @@ import os
 
 ROOT_DIR = pathlib.Path(os.path.dirname(os.path.realpath(__file__))).parent.absolute()
 
+# TODO: Finish comments
+
 class ConfigArgs:
-    def __init__(self, inst, path, rand, xlsx, step, rows, cols, itrs, pool):
-        self.inst = inst
+    def __init__(self, path, inst, rand, xlsx, step, rows, cols, itrs, pool):
         self.path = path
+        self.inst = inst
         self.rand = rand
         self.xlsx = xlsx
         self.step = step
@@ -24,6 +26,15 @@ class ConfigArgs:
         self.pool = pool
 
 def __create_datasets(config_args):
+    """
+    Creates a file named 'config' in this project's root directory.
+    using the member variables of util.ConfigArgs.
+
+    Parameter(s):
+    -------------
+        config_args : util.ConfigArgs
+            A 
+    """
     cwd = pathlib.Path().cwd()
     os.chdir(ROOT_DIR)
     with open(os.path.join(ROOT_DIR, 'config'), 'w') as f:
@@ -62,8 +73,9 @@ def __create_process(child_conn, xlsx, inputs_path, output_path, experiment_arg,
 
 def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fig, barplt, column):
     """
-    Parameter
-    column a string 
+    Parameters
+    ----------
+        column a string 
     """
 
     # Create relative paths
@@ -80,9 +92,15 @@ def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fi
         , sofficepath
     )
 
-    # Create datasets, run experiments, update plots in real-time
-    __create_datasets(config_args)
+    # Create datasets
+    already_exists = os.path.exists(relative_inputs_path)
+    if not already_exists: 
+        __create_datasets(config_args)
+
+    # Run experiments
     if process is not None:
+
+        # Update plots in real-time
         process.start()
         while True:
             item = parent_conn.recv()
@@ -99,20 +117,34 @@ def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fi
             if item is None:        break
         process.join()
         process.close()
-        shutil.move(relative_inputs_path, relative_output_path)
-    
+
+        # Move or copy dataset to output folder
+        if already_exists:
+            shutil.copytree(relative_inputs_path, os.path.join(relative_output_path, "dataset"))    
+        else:
+            shutil.move(relative_inputs_path, relative_output_path)
+
 def run(config_args, output_path, experiment_arg, sofficepath):
-    
+    """
+    """
+
     # Create relative paths
     relative_inputs_path = os.path.join(ROOT_DIR, config_args.path)
     relative_output_path = os.path.join(ROOT_DIR, output_path)
 
-    # Create datasets and run experiments
-    __create_datasets(config_args)
+    # Create datasets
+    already_exists = os.path.exists(relative_inputs_path)
+    if not already_exists: 
+        __create_datasets(config_args)
+
+    # Run experiments
     if config_args.xlsx:
         excel_main(relative_inputs_path, relative_output_path, totl_trials=experiment_arg)
     else:
-        libre_main(relative_inputs_path, relative_output_path, pollseconds=experiment_arg)
+        libre_main(relative_inputs_path, relative_output_path, pollseconds=experiment_arg, sofficepath=sofficepath)
 
-    # Move dataset to output folder to reduce clutter
-    shutil.move(relative_inputs_path, relative_output_path)
+    # Move or copy dataset to output folder
+    if already_exists:
+        shutil.copytree(relative_inputs_path, os.path.join(relative_output_path, "dataset"))
+    else:
+        shutil.move(relative_inputs_path, relative_output_path)

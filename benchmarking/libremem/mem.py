@@ -60,8 +60,8 @@ def measure_calc_mem(soffice_path, in_path, out_path, poll_seconds, prefix="", s
     Measures the memory consumption of the Calc file specified by `in_path`.
     All measurements are in bytes.
 
-    Parameters:
-    -----------
+    Parameter(s):
+    -------------
         soffice_path : str
             The absolute path to soffice.
 
@@ -142,8 +142,8 @@ def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
     Measures the memory consumption of all Calc files in `path`.
     All measurements are in bytes.
 
-    Parameters:
-    -----------
+    Parameter(s):
+    -------------
         soffice_path : str
             The absolute path to soffice.
 
@@ -182,8 +182,7 @@ def run(soffice_path, in_path, out_path, poll_seconds, prefix, results):
             )
         )
 
-def main(child_conn
-    , inputs_path
+def main(inputs_path
     , output_path
     , fv_inputdir="formula-value"
     , vo_inputdir="value-only"
