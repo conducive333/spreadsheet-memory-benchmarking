@@ -1,5 +1,5 @@
+import pymem.utils.pipeline as pipeline
 import pathlib
-import util
 import os
 
 # A script for running memory benchmarking experiments
@@ -9,7 +9,7 @@ if __name__ == "__main__":
     INTEGER_ARG = 1
     OUTPUT_PATH = os.path.join("experiments", "results", "excel", "TEST")
     SOFFICE_DIR = "C:/Program Files/LibreOffice/program/soffice"
-    CONFIG_ARGS = util.ConfigArgs(inst="CompleteBipartiteSum"
+    CONFIG_ARGS = pipeline.ConfigArgs(inst="CompleteBipartiteSum"
         , path=os.path.join("experiments", "input-data", "rscs-test")
         , rand=42
         , xlsx=False
@@ -21,4 +21,4 @@ if __name__ == "__main__":
     )
 
     # Create datasets, run experiments, save results
-    util.run(CONFIG_ARGS, OUTPUT_PATH, INTEGER_ARG, SOFFICE_DIR)
+    pipeline.run(CONFIG_ARGS, OUTPUT_PATH, INTEGER_ARG, SOFFICE_DIR)

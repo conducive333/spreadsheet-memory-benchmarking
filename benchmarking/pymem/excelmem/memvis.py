@@ -1,3 +1,4 @@
+import pymem.utils.memdata as memdata
 import win32com.client
 import subprocess
 import traceback
@@ -8,8 +9,6 @@ import pandas
 import time
 import sys
 import os
-
-from . import memdata
 
 # Benchmark all .xlsx files in path
 def run(child_conn, path, trials, prefix, results):

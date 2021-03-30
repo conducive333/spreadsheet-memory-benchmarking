@@ -1,3 +1,4 @@
+import pymem.utils.memdata as memdata
 import win32com.client
 import subprocess
 import traceback
@@ -9,10 +10,8 @@ import time
 import sys
 import os
 
-from . import memdata
-
 # Benchmark all .xlsx files in path
-def run(path, prefix, trials, results):
+def run(path, trials, prefix, results):
     
     # Collect and shuffle input files
     pairs = [(f, int(f[f.index('-')+1:f.index('.')])) for f in os.listdir(path) if f.endswith(".xlsx")]
@@ -76,8 +75,8 @@ def main(inputs_path
     # Run Experiments
     results = dict()                                                                # Container for experimental results        
     exptime = datetime.datetime.now()                                               # Start time
-    run(os.path.join(inputs_path, vo_inputdir), "Value "  , totl_trials, results)   # Run value-only experiments
-    run(os.path.join(inputs_path, fv_inputdir), "Formula ", totl_trials, results)   # Run formula-value experiments
+    run(os.path.join(inputs_path, vo_inputdir), totl_trials, "Value "  , results)   # Run value-only experiments
+    run(os.path.join(inputs_path, fv_inputdir), totl_trials, "Formula ", results)   # Run formula-value experiments
 
     # Report timing stats
     exptime = (datetime.datetime.now() - exptime).total_seconds()

@@ -33,6 +33,3 @@
 
 - `memvis.py`
     - Same as `mem.py`, but modified so that it may communicate intermediate results to a jupyter notebook.
-
-- `memdata.py`
-    - A helper class for collecting memory measurements.
