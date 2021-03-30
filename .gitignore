@@ -1,7 +1,4 @@
 __pycache__
 config
-/*.jar
-/input-data
-/scripts
-/results
+/experiments
 /venv
