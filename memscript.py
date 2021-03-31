@@ -6,11 +6,12 @@ import os
 if __name__ == "__main__":
 
     # See README for explanations of each field
-    INTEGER_ARG = 1
-    OUTPUT_PATH = os.path.join("experiments", "results", "excel", "TEST")
+    INTEGER_ARG = 5
+    OUTPUT_PATH = os.path.join("experiments", "results", "excel", "rcbs-5trials-rand-1col", "run2")
     SOFFICE_DIR = "C:/Program Files/LibreOffice/program/soffice"
-    CONFIG_ARGS = pipeline.ConfigArgs(inst="CompleteBipartiteSum"
-        , path=os.path.join("experiments", "input-data", "rscs-test")
+    CONFIG_ARGS = pipeline.ConfigArgs(
+        path=os.path.join("experiments", "results", "excel", "rcbs-5trials-rand-1col", "dataset")
+        , inst="CompleteBipartiteSum"
         , rand=42
         , xlsx=True
         , step=10000

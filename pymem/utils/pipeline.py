@@ -1,3 +1,4 @@
+import pymem.utils.definitions as definitions
 import pymem.excelmem.memvis as excel_memvis
 import pymem.libremem.memvis as libre_memvis
 import pymem.excelmem.mem as excel_mem
@@ -5,10 +6,7 @@ import pymem.libremem.mem as libre_mem
 import multiprocessing
 import subprocess
 import pathlib
-import shutil
 import os
-
-ROOT_DIR = os.path.dirname(os.path.abspath("requirements.txt"))
 
 class ConfigArgs:
     def __init__(self, path, inst, rand, xlsx, step, rows, cols, itrs, pool):
@@ -82,10 +80,11 @@ def create_datasets(config_args):
             datagen project's README for an explanation of each field.
     """
     cwd = pathlib.Path().cwd()
-    os.chdir(ROOT_DIR)
-    with open(os.path.join(ROOT_DIR, 'config'), 'w') as f:
+    os.chdir(definitions.ROOT_DIR)
+    with open(os.path.join(definitions.ROOT_DIR, 'config'), 'w') as f:
+        config_args_path = pathlib.Path(config_args.path).as_posix()
         f.write(f"INST={config_args.inst}\n")
-        f.write(f"PATH={config_args.path}\n")
+        f.write(f"PATH={config_args_path}\n")
         f.write(f"RAND={config_args.rand}\n")
         f.write(f"XLSX={config_args.xlsx}\n")
         f.write(f"STEP={config_args.step}\n")
@@ -119,29 +118,17 @@ def run(config_args, output_path, experiment_arg, sofficepath):
     """
 
     # Create relative paths
-    relative_inputs_path = os.path.join(ROOT_DIR, config_args.path)
-    relative_output_path = os.path.join(ROOT_DIR, output_path)
+    relative_inputs_path = os.path.join(definitions.ROOT_DIR, config_args.path)
+    relative_output_path = os.path.join(definitions.ROOT_DIR, output_path)
 
-    # Quit if output directory already exists
-    if os.path.exists(relative_output_path):
-        print("\nOutput directory already exists. Exiting...")
-        return
-
-    # Create datasets
-    already_exists = os.path.exists(relative_inputs_path)
-    if not already_exists: create_datasets(config_args)
+    # Create datasets (if necessary)
+    if not os.path.exists(relative_inputs_path): create_datasets(config_args)
 
     # Run experiments
     if config_args.xlsx:
         excel_mem.main(relative_inputs_path, relative_output_path, totl_trials=experiment_arg)
     else:
         libre_mem.main(relative_inputs_path, relative_output_path, pollseconds=experiment_arg, sofficepath=sofficepath)
-
-    # Move or copy dataset to output folder
-    if already_exists:
-        shutil.copytree(relative_inputs_path, os.path.join(relative_output_path, "dataset"))
-    else:
-        shutil.move(relative_inputs_path, relative_output_path)
 
 def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fig, barplt, column):
     """
@@ -189,13 +176,8 @@ def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fi
     """
 
     # Create relative paths
-    relative_inputs_path = os.path.join(ROOT_DIR, config_args.path)
-    relative_output_path = os.path.join(ROOT_DIR, output_path)
-
-    # Quit if output directory already exists
-    if os.path.exists(relative_output_path):
-        print("\nOutput directory already exists. Exiting...")
-        return
+    relative_inputs_path = os.path.join(definitions.ROOT_DIR, config_args.path)
+    relative_output_path = os.path.join(definitions.ROOT_DIR, output_path)
 
     # Create a process with experiment arguments
     parent_conn, child_conn = multiprocessing.Pipe()
@@ -207,14 +189,11 @@ def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fi
         , sofficepath
     )
 
-    # Create datasets
-    already_exists = os.path.exists(relative_inputs_path)
-    if not already_exists: create_datasets(config_args)
+    # Create datasets (if necessary)
+    if not os.path.exists(relative_inputs_path): create_datasets(config_args)
 
-    # Run experiments
+    # Run experiments and update plots in real-time
     if process is not None:
-
-        # Update plots in real-time
         process.start()
         while True:
             item = parent_conn.recv()
@@ -231,9 +210,3 @@ def run_vis(config_args, output_path, experiment_arg, sofficepath, fv_fig, vo_fi
             if item is None:        break
         process.join()
         process.close()
-
-        # Move or copy dataset to output folder
-        if already_exists:
-            shutil.copytree(relative_inputs_path, os.path.join(relative_output_path, "dataset"))    
-        else:
-            shutil.move(relative_inputs_path, relative_output_path)

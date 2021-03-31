@@ -34,7 +34,7 @@ public class Main {
             pr.load(in);
             INST = Main.resolveName(pr.getProperty("INST"));
             PATH = Path.of(pr.getProperty("PATH"));
-            RAND = pr.getProperty("RAND") == "" ? null : new Random(Long.parseLong(pr.getProperty("RAND")));
+            RAND = pr.getProperty("RAND").length() == 0 ? null : new Random(Long.parseLong(pr.getProperty("RAND")));
             XLSX = Boolean.parseBoolean(pr.getProperty("XLSX"));
             STEP = Integer.parseInt(pr.getProperty("STEP"));
             ROWS = Integer.parseInt(pr.getProperty("ROWS"));
