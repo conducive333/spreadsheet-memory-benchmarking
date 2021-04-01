@@ -1,4 +1,3 @@
-import pymem.utils.definitions as definitions
 import pymem.excelmem.memvis as excel_memvis
 import pymem.libremem.memvis as libre_memvis
 import pymem.excelmem.mem as excel_mem
@@ -7,6 +6,8 @@ import multiprocessing
 import subprocess
 import pathlib
 import os
+
+from . import definitions
 
 class ConfigArgs:
     def __init__(self, path, inst, rand, xlsx, step, rows, cols, itrs, pool):

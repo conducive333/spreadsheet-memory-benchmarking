@@ -1,25 +1,25 @@
-import pymem.utils.pipeline as pipeline
 import pathlib
+import pymem
 import os
 
 # A script for running memory benchmarking experiments
 if __name__ == "__main__":
 
     # See README for explanations of each field
-    INTEGER_ARG = 5
-    OUTPUT_PATH = os.path.join("experiments", "results", "excel", "rcbs-5trials-rand-1col", "run2")
+    INTEGER_ARG = 1
+    OUTPUT_PATH = os.path.join("TEST")
     SOFFICE_DIR = "C:/Program Files/LibreOffice/program/soffice"
-    CONFIG_ARGS = pipeline.ConfigArgs(
-        path=os.path.join("experiments", "results", "excel", "rcbs-5trials-rand-1col", "dataset")
+    CONFIG_ARGS = pymem.utils.pipeline.ConfigArgs(
+        path=os.path.join("TEST", "dataset")
         , inst="CompleteBipartiteSum"
         , rand=42
         , xlsx=True
-        , step=10000
-        , rows=0
+        , step=0
+        , rows=100
         , cols=1
-        , itrs=11
-        , pool=5
+        , itrs=1
+        , pool=1
     )
 
     # Create datasets, run experiments, save results
-    pipeline.run(CONFIG_ARGS, OUTPUT_PATH, INTEGER_ARG, SOFFICE_DIR)
+    pymem.utils.pipeline.run(CONFIG_ARGS, OUTPUT_PATH, INTEGER_ARG, SOFFICE_DIR)
