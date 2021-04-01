@@ -10,6 +10,7 @@
         - `utils`       : Contains various Python helper code.
 
 - Files:
+    - `createdata.py`       : A script for generating custom datasets.
     - `memscript.py`        : The script for running memory benchmark experiments.
     - `visualizer.ipynb`    : Same as `memscript.py`, except that experimental results are plotted as soon as they become available.
 
@@ -20,6 +21,12 @@
 - `SOFFICE_DIR` : The absolute path to soffice.
 
 ## How to Run Each Script
+- `createdata.py`
+    1. Install all python dependencies specified in `requirements.txt`.
+    2. Download `datagen.jar` from this project's 'Releases' page and place it in the root directory of this project.
+    3. Fill in each script argument with the desired parameters.
+    4. Run the script.
+
 - `memscript.py`
     1. Install all python dependencies specified in `requirements.txt`.
     2. If you'd like to create your own datasets, download `datagen.jar` from this project's 'Releases' page and place it in the root directory of this project. Otherwise, feel free to skip this step.

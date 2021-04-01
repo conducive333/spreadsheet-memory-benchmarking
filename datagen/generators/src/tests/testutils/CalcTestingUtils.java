@@ -23,7 +23,7 @@ import creator.Creator;
  * 3/31/21 NOTE: jopendocument and SimpleODS have been 
  * very inconsistent when reading .ods files and don't
  * seem suitable for testing (at least at the time of 
- * this writing). The current workaround uses stubs to
+ * this writing). The current workaround uses mocks to
  * check if functions are being called with the correct
  * parameters.
  * 
