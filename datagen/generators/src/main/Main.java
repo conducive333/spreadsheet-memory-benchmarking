@@ -44,8 +44,9 @@ public class Main {
     }
 
     private static Creatable resolveName (String s) {
-        if (s.equals("CompleteBipartiteSum"))    return new CompleteBipartiteSum();
-        if (s.equals("SingleCellSum"))           return new SingleCellSum();
+        if (s.equals("CompleteBipartiteSum"))   return new CompleteBipartiteSum();
+        if (s.equals("SingleCellSum"))          return new SingleCellSum();
+        if (s.equals("RunningSum"))             return new RunningSum();
         return null;
     }
 
