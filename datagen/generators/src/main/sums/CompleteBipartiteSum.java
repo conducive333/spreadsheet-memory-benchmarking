@@ -45,7 +45,7 @@ public class CompleteBipartiteSum implements Creatable {
                 fRow.createCell(c).setCellValue(FILL_VALUE);
                 vRow.createCell(c).setCellValue(FILL_VALUE);
                 fRow.createCell(c + cols).setCellFormula(String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), rows));
-                vRow.createCell(c + cols).setCellValue(rows * cols);
+                vRow.createCell(c + cols).setCellValue(FILL_VALUE * rows * cols);
             }
         }   
     }
@@ -81,14 +81,14 @@ public class CompleteBipartiteSum implements Creatable {
                 fRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 vRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), rows));
-                vRow.getOrCreateCell(c + cols).setFloatValue(rows * cols);
+                vRow.getOrCreateCell(c + cols).setFloatValue((double) (FILL_VALUE * rows * cols));
             }
         }
     }
 
     @Override
     public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
-        int total = 0;
+        double total = 0.0;
         Deque<Integer> values = new ArrayDeque<>();
         for (int i = 0; i < rows * cols; i++) {
             int num = rand.nextInt(rows * cols);
@@ -99,7 +99,7 @@ public class CompleteBipartiteSum implements Creatable {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
             for (int c = 0; c < cols; c++) {
-                int num = values.pop();
+                double num = values.pop();
                 fRow.getOrCreateCell(c).setFloatValue(num);
                 vRow.getOrCreateCell(c).setFloatValue(num);
                 fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), rows));

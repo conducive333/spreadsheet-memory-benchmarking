@@ -46,30 +46,23 @@ public class SingleCellSum implements Creatable {
                 fRow.createCell(c).setCellValue(FILL_VALUE);
                 vRow.createCell(c).setCellValue(FILL_VALUE);
                 fRow.createCell(c + cols).setCellFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
-                vRow.createCell(c + cols).setCellValue(1);
+                vRow.createCell(c + cols).setCellValue(FILL_VALUE);
             }
         }   
     }
 
     @Override
     public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, Random rand) {
-        double total = 0.0;
-        Deque<Double> values = new ArrayDeque<>();
-        for (int i = 0; i < rows * cols; i++) {
-            int num = rand.nextInt(rows * cols);
-            values.add((double) num);
-            total += num;
-        }
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
             for (int c = 0; c < cols; c++) {
-                double num = values.pop();
+                double num = rand.nextInt(rows * cols);
                 String col = CellReference.convertNumToColString(c);
                 fRow.createCell(c).setCellValue(num);
                 vRow.createCell(c).setCellValue(num);
                 fRow.createCell(c + cols).setCellFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
-                vRow.createCell(c + cols).setCellValue(total);
+                vRow.createCell(c + cols).setCellValue(num);
             }
         }
     }
@@ -84,30 +77,23 @@ public class SingleCellSum implements Creatable {
                 fRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 vRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
-                vRow.getOrCreateCell(c + cols).setFloatValue(rows * cols);
+                vRow.getOrCreateCell(c + cols).setFloatValue(FILL_VALUE);
             }
         }
     }
 
     @Override
     public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
-        int total = 0;
-        Deque<Integer> values = new ArrayDeque<>();
-        for (int i = 0; i < rows * cols; i++) {
-            int num = rand.nextInt(rows * cols);
-            values.add(num);
-            total += num;
-        }
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
             for (int c = 0; c < cols; c++) {
-                int num = values.pop();
+                double num = rand.nextInt(rows * cols);
                 String col = CellReference.convertNumToColString(c);
                 fRow.getOrCreateCell(c).setFloatValue(num);
                 vRow.getOrCreateCell(c).setFloatValue(num);
                 fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
-                vRow.getOrCreateCell(c + cols).setFloatValue(total);
+                vRow.getOrCreateCell(c + cols).setFloatValue(num);
             }
         }
     }

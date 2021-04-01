@@ -43,7 +43,7 @@ public class RunningSum implements Creatable {
                 fRow.createCell(c).setCellValue(FILL_VALUE);
                 vRow.createCell(c).setCellValue(FILL_VALUE);
                 fRow.createCell(c + cols).setCellFormula(String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), r + 1));
-                vRow.createCell(c + cols).setCellValue(rows * cols);
+                vRow.createCell(c + cols).setCellValue(FILL_VALUE * (r + 1) * cols);
             }
         }   
     }
@@ -77,7 +77,7 @@ public class RunningSum implements Creatable {
                 fRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 vRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), r + 1));
-                vRow.getOrCreateCell(c + cols).setFloatValue(rows * cols);
+                vRow.getOrCreateCell(c + cols).setFloatValue((double) (FILL_VALUE * (r + 1) * cols));
             }
         }
     }

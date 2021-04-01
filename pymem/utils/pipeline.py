@@ -93,6 +93,7 @@ def create_datasets(config_args):
         f.write(f"ITER={config_args.itrs}\n")
         f.write(f"POOL={config_args.pool}\n")
     subprocess.check_call(["java", "-jar", "main.jar"])
+    os.remove(os.path.join(definitions.ROOT_DIR, 'config'))
     os.chdir(cwd)
 
 def run(config_args, output_path, experiment_arg, sofficepath):

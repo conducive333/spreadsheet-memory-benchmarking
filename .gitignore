@@ -1,5 +1,6 @@
 __pycache__
 config
+/myvisualizer.ipynb
 /.vscode
 /experiments
 /venv
