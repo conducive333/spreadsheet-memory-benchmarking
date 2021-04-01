@@ -22,13 +22,13 @@
 ## How to Run Each Script
 - `memscript.py`
     1. Install all python dependencies specified in `requirements.txt`
-    2. If you cloned this repository, it should've come with a file, `main.jar`, in the repo's root directory. If it does not exist, export `datagen` as a jar in the repo's root directory before continuing.
+    2. Download `main.jar` from this project's 'Releases' page on Github and place it in the root directory of this project.
     3. Once you have the jar file, fill in each script argument.
     4. Run the script.
 
 - `visualizer.ipynb`
     1. Install all python dependencies specified in `requirements.txt`
-    2. If you cloned this repository, it should've have come with a file, `main.jar`, in the repo's root directory. If it does not exist, export `datagen` as a jar in the repo's root directory before continuing.
+    2. Download `main.jar` from this project's 'Releases' page on Github and place it in the root directory of this project.
     3. Once you have the jar file, find the cell which sets the script's arguments and fill them in.
     4. Run all cells in order (i.e. from top to bottom).
 
