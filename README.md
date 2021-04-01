@@ -23,13 +23,13 @@
 - `memscript.py`
     1. Install all python dependencies specified in `requirements.txt`
     2. Download `main.jar` from this project's 'Releases' page on Github and place it in the root directory of this project.
-    3. Once you have the jar file, fill in each script argument.
+    3. Fill in each script argument with the desired parameters.
     4. Run the script.
 
 - `visualizer.ipynb`
     1. Install all python dependencies specified in `requirements.txt`
     2. Download `main.jar` from this project's 'Releases' page on Github and place it in the root directory of this project.
-    3. Once you have the jar file, find the cell which sets the script's arguments and fill them in.
+    3. Find the cell which sets the script's arguments and fill them in with the desired parameters.
     4. Run all cells in order (i.e. from top to bottom).
 
 ## Notes
