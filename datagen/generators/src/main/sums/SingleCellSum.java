@@ -7,10 +7,8 @@ import org.apache.poi.ss.util.CellReference;
 import com.github.jferard.fastods.TableRowImpl;
 import com.github.jferard.fastods.Table;
 
-import java.util.ArrayDeque;
 import java.io.IOException;
 import java.util.Random;
-import java.util.Deque;
 
 import creator.Creatable;
 
