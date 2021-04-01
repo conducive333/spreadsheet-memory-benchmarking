@@ -1,5 +1,5 @@
+import pymem.utils.pipeline
 import pathlib
-import pymem
 import os
 
 # A script for running memory benchmarking experiments

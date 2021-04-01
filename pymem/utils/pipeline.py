@@ -93,7 +93,7 @@ def create_datasets(config_args):
         f.write(f"COLS={config_args.cols}\n")
         f.write(f"ITER={config_args.itrs}\n")
         f.write(f"POOL={config_args.pool}\n")
-    subprocess.check_call(["java", "-jar", "main.jar"])
+    subprocess.check_call(["java", "-jar", "datagen.jar"])
     os.remove(os.path.join(definitions.ROOT_DIR, 'config'))
     os.chdir(cwd)
 
