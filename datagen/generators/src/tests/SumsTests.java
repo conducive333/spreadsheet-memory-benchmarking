@@ -18,19 +18,20 @@ public class SumsTests {
     /**
      * This is for generating random spreadsheet sizes.
      */
-    public static final Random RANDOM = new Random(42L);
+    private static final Random RANDOM = new Random(42L);
 
     /** 
-     *  
      * The number of rows and columns to generate for a 
      * test spreadsheet is chosen between 1 (inclusive)
      * and the number below (exclusive).
      */
-    public static final int EXCLUSIVE_UPPER_BOUND = 5;
+    private static final int EXCLUSIVE_UPPER_BOUND = 5;
 
-
-    private int rows;
-    private int cols;
+    /**
+     * The number of rows and columns to use. These are 
+     * randomly assigned before each test case.
+     */
+    private int rows, cols;
 
     @BeforeClass
     public static void createDirectories () {
@@ -65,6 +66,8 @@ public class SumsTests {
         TestingUtils.TEMP_DIR.delete();
     }
 
+    /** Complete Bipartite Sum Tests */
+
     @Test
     public void testExcelCompleteBipartiteSumRand () {
         ExcelTestingUtils.integrationTest(new CompleteBipartiteSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
@@ -93,8 +96,10 @@ public class SumsTests {
         );
     }
 
+    /** Single Cell Sum Tests */
+
     @Test
-    public void testExcelSingleCellSumStructureRand () {
+    public void testExcelSingleCellSumRand () {
         ExcelTestingUtils.integrationTest(new SingleCellSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
@@ -102,7 +107,7 @@ public class SumsTests {
     }
 
     @Test
-    public void testExcelSingleCellSumStructureNoRand () {
+    public void testExcelSingleCellSumNoRand () {
         ExcelTestingUtils.integrationTest(new SingleCellSum(), this.rows, this.cols, null, (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
@@ -110,7 +115,7 @@ public class SumsTests {
     }
 
     @Test
-    public void testCalcSingleCellSumStructureRand () {
+    public void testCalcSingleCellSumRand () {
         CalcTestingUtils.integrationTest(new SingleCellSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
@@ -118,40 +123,44 @@ public class SumsTests {
     }
 
     @Test
-    public void testCalcSingleCellSumStructureNoRand () {
+    public void testCalcSingleCellSumNoRand () {
         CalcTestingUtils.integrationTest(new SingleCellSum(), this.rows, this.cols, null, (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
         });
     }
 
+    /** Running Sum Tests */
+
     @Test
-    public void testExcelRunningSumStructureRand () {
+    public void testExcelRunningSumRand () {
         ExcelTestingUtils.integrationTest(new RunningSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), currRowIdx + 1)
         );
     }
 
     @Test
-    public void testExcelRunningSumStructureNoRand () {
+    public void testExcelRunningSumNoRand () {
         ExcelTestingUtils.integrationTest(new RunningSum(), this.rows, this.cols, null, (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), currRowIdx + 1)
         );
     }
 
     @Test
-    public void testCalcRunningSumStructureRand () {
+    public void testCalcRunningSumRand () {
         CalcTestingUtils.integrationTest(new RunningSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), currRowIdx + 1)
         );
     }
 
     @Test
-    public void testCalcRunningSumStructureNoRand () {
+    public void testCalcRunningSumNoRand () {
         CalcTestingUtils.integrationTest(new RunningSum(), this.rows, this.cols, null, (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), currRowIdx + 1)
         );
     }
+
+    /** Miscellaneous Calc Tests */
 
     @Test
     public void testCreateCalcFilesRand () {
