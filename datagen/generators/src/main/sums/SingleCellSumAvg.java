@@ -7,23 +7,22 @@ import org.apache.poi.ss.util.CellReference;
 import com.github.jferard.fastods.TableRowImpl;
 import com.github.jferard.fastods.Table;
 
-import java.util.ArrayDeque;
 import java.io.IOException;
 import java.util.Random;
-import java.util.Deque;
 
 import creator.Creatable;
 
-public class CompleteBipartiteSum implements Creatable {
+public class SingleCellSumAvg implements Creatable {
     /**
      * Creates a spreadsheet with the following structure:
      * 
-     * 0    |   A   |       B       |
-     * ------------------------------
-     * 1    |   ?   |   =SUM(A1:AN) |
-     * 2    |   ?   |   =SUM(A1:AN) |
-     * ...  |   ... |   ...         |
-     * N    |   ?   |   =SUM(A1:AN) |
+     * 0    |   A   |       B           |
+     * ----------------------------------
+     * 1    |   ?   |   =SUM(A1:A1)     |
+     * 2    |   ?   |   =AVERAGE(A2:A2) |
+     * 3    |   ?   |   =SUM(A3:A3)     |
+     * 4    |   ?   |   =AVERAGE(A4:A4) |
+     * ...  |   ... |   ...             |
      * 
      * ? = a random value (or a placeholder value if no
      * random seed is specified). The COLS parameter 
@@ -34,40 +33,37 @@ public class CompleteBipartiteSum implements Creatable {
      */
 
     private static final double FILL_VALUE = 1.0;
-    private static final String CREATE_STR = "SUM(A1:%s%d)";
+    private static final String CREATE_STR = "%s(%s%d:%s%d)";
 
     @Override
     public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
+            String frmula = r % 2 == 0 ? "SUM" : "AVERAGE";
             for (int c = 0; c < cols; c++) {
+                String col = CellReference.convertNumToColString(c);
                 fRow.createCell(c).setCellValue(FILL_VALUE);
                 vRow.createCell(c).setCellValue(FILL_VALUE);
-                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.createCell(c + cols).setCellValue(FILL_VALUE * rows * cols);
+                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, frmula, col, r + 1, col, r + 1));
+                vRow.createCell(c + cols).setCellValue(FILL_VALUE);
             }
         }   
     }
 
     @Override
     public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, Random rand) {
-        double total = 0.0;
-        Deque<Double> values = new ArrayDeque<>();
-        for (int i = 0; i < rows * cols; i++) {
-            int num = rand.nextInt(rows * cols);
-            values.add((double) num);
-            total += num;
-        }
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
+            String frmula = r % 2 == 0 ? "SUM" : "AVERAGE";
             for (int c = 0; c < cols; c++) {
-                double num = values.pop();
+                double num = rand.nextInt(rows * cols);
+                String col = CellReference.convertNumToColString(c);
                 fRow.createCell(c).setCellValue(num);
                 vRow.createCell(c).setCellValue(num);
-                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.createCell(c + cols).setCellValue(total);
+                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, frmula, col, r + 1, col, r + 1));
+                vRow.createCell(c + cols).setCellValue(num);
             }
         }
     }
@@ -77,33 +73,30 @@ public class CompleteBipartiteSum implements Creatable {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
+            String formulaStr = r % 2 == 0 ? "SUM" : "AVERAGE";
             for (int c = 0; c < cols; c++) {
+                String col = CellReference.convertNumToColString(c);
                 fRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 vRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
-                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.getOrCreateCell(c + cols).setFloatValue((FILL_VALUE * rows * cols));
+                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, formulaStr, col, r + 1, col, r + 1));
+                vRow.getOrCreateCell(c + cols).setFloatValue(FILL_VALUE);
             }
         }
     }
 
     @Override
     public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
-        double total = 0.0;
-        Deque<Integer> values = new ArrayDeque<>();
-        for (int i = 0; i < rows * cols; i++) {
-            int num = rand.nextInt(rows * cols);
-            values.add(num);
-            total += num;
-        }
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
+            String formulaStr = r % 2 == 0 ? "SUM" : "AVERAGE";
             for (int c = 0; c < cols; c++) {
-                double num = values.pop();
+                double num = rand.nextInt(rows * cols);
+                String col = CellReference.convertNumToColString(c);
                 fRow.getOrCreateCell(c).setFloatValue(num);
                 vRow.getOrCreateCell(c).setFloatValue(num);
-                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.getOrCreateCell(c + cols).setFloatValue(total);
+                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, formulaStr, col, r + 1, col, r + 1));
+                vRow.getOrCreateCell(c + cols).setFloatValue(num);
             }
         }
     }

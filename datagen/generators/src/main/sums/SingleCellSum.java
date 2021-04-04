@@ -29,10 +29,10 @@ public class SingleCellSum implements Creatable {
      * the number of columns with formulae. For example,
      * if COLS = 2, then there will be 2 columns of values
      * and 2 columns of formulae.
-     * 
      */
 
     private static final double FILL_VALUE = 1.0;
+    private static final String CREATE_STR = "SUM(%s%d:%s%d)";
 
     @Override
     public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
@@ -43,7 +43,7 @@ public class SingleCellSum implements Creatable {
                 String col = CellReference.convertNumToColString(c);
                 fRow.createCell(c).setCellValue(FILL_VALUE);
                 vRow.createCell(c).setCellValue(FILL_VALUE);
-                fRow.createCell(c + cols).setCellFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
+                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, col, r + 1, col, r + 1));
                 vRow.createCell(c + cols).setCellValue(FILL_VALUE);
             }
         }   
@@ -59,7 +59,7 @@ public class SingleCellSum implements Creatable {
                 String col = CellReference.convertNumToColString(c);
                 fRow.createCell(c).setCellValue(num);
                 vRow.createCell(c).setCellValue(num);
-                fRow.createCell(c + cols).setCellFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
+                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, col, r + 1, col, r + 1));
                 vRow.createCell(c + cols).setCellValue(num);
             }
         }
@@ -74,7 +74,7 @@ public class SingleCellSum implements Creatable {
                 String col = CellReference.convertNumToColString(c);
                 fRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 vRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
-                fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
+                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, col, r + 1, col, r + 1));
                 vRow.getOrCreateCell(c + cols).setFloatValue(FILL_VALUE);
             }
         }
@@ -90,7 +90,7 @@ public class SingleCellSum implements Creatable {
                 String col = CellReference.convertNumToColString(c);
                 fRow.getOrCreateCell(c).setFloatValue(num);
                 vRow.getOrCreateCell(c).setFloatValue(num);
-                fRow.getOrCreateCell(c + cols).setFormula(String.format("SUM(%s%d:%s%d)", col, r + 1, col, r + 1));
+                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, col, r + 1, col, r + 1));
                 vRow.getOrCreateCell(c + cols).setFloatValue(num);
             }
         }
