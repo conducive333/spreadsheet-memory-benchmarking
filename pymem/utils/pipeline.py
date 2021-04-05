@@ -23,10 +23,8 @@ class ConfigArgs:
 
 def __create_process(child_conn, xlsx, inputs_path, output_path, experiment_arg, sofficepath):
     """
-    Performs each phase of the benchmarking pipeline:
-        1. Generates datasets (if necessary)
-        2. Runs the appropriate benchmarking code
-        3. Saves results to the specified output path
+    Creates a process that will run the Jupyter notebook version of
+    the appropriate benchmarking function.
 
     Parameter(s):
     -------------
@@ -91,9 +89,9 @@ def create_datasets(config_args):
         f.write(f"STEP={config_args.step}\n")
         f.write(f"ROWS={config_args.rows}\n")
         f.write(f"COLS={config_args.cols}\n")
-        f.write(f"ITER={config_args.itrs}\n")
+        f.write(f"ITRS={config_args.itrs}\n")
         f.write(f"POOL={config_args.pool}\n")
-    subprocess.check_call(["java", "-jar", "datagen.jar"])
+    subprocess.check_call(["java", "-jar", definitions.JAR_NAME])
     os.remove(os.path.join(definitions.ROOT_DIR, 'config'))
     os.chdir(cwd)
 

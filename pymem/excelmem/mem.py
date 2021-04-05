@@ -1,5 +1,5 @@
 import pymem.utils.memdata as memdata
-import win32com.client
+import pymem.utils.excel as excel
 import subprocess
 import traceback
 import datetime
@@ -9,6 +9,11 @@ import pandas
 import time
 import sys
 import os
+
+# NOTE: Starting a fresh Excel process before the trials loop is much 
+# faster than spawning one at the beginning of each iteration of the 
+# loop. The former method also seems to give the same results as the 
+# latter method.
 
 def run(path, trials, prefix, results):
     """
@@ -38,31 +43,25 @@ def run(path, trials, prefix, results):
     for fname, rows in pairs:
 
         # Start a fresh Excel process
-        excel = win32com.client.DispatchEx('Excel.Application')
-        excel.Visible = False
-        excel.DisplayAlerts = False
-        excel.ScreenUpdating = False
+        xl = excel.Excel(start=True)
 
         try:
             
             # Get a new memory data collector
-            collector = memdata.ExcelMemDataCollector(excel)
+            collector = memdata.MemDataCollector()
 
             # Open, measure, close, repeat
             for t in range(trials):
                 print(f"Opening {fname} (trial {t + 1})")
-                wb = excel.Workbooks.Open(os.path.join(pathlib.Path.cwd() / path, fname))
-                collector.measure()
-                wb.Close()
-
-            # Free resources
-            collector.close_handle()
+                xl.open_wb(os.path.join(pathlib.Path.cwd() / path, fname))
+                collector.measure(xl.pid)
+                xl.close_wb()
             
             # Update results
             if rows not in results: results[rows] = {}
             results[rows].update(collector.report(smooth=True, prefix=prefix, suffix=" (MB)", normalizer=1e6))
 
-            # Show results and clean up
+            # Show results
             print(results[rows])
 
         except Exception as e:
@@ -70,11 +69,11 @@ def run(path, trials, prefix, results):
             # Completely end the program if an exception is raised
             traceback.print_exc()
             sys.exit()
-
+        
         finally:
 
             # Close Excel
-            excel.Application.Quit()
+            xl.end()
 
 def main(inputs_path
     , output_path

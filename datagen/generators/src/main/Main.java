@@ -21,7 +21,7 @@ public class Main {
     private static int        STEP;
     private static int        ROWS;
     private static int        COLS;
-    private static int        ITER;
+    private static int        ITRS;
     private static int        POOL;
 
     static {
@@ -36,7 +36,7 @@ public class Main {
             STEP = Integer.parseInt(pr.getProperty("STEP"));
             ROWS = Integer.parseInt(pr.getProperty("ROWS"));
             COLS = Integer.parseInt(pr.getProperty("COLS"));
-            ITER = Integer.parseInt(pr.getProperty("ITER"));
+            ITRS = Integer.parseInt(pr.getProperty("ITRS"));
             POOL = Integer.parseInt(pr.getProperty("POOL"));
             in.close();
         } catch (IOException e) {
@@ -81,12 +81,12 @@ public class Main {
         /** Create datasets */
         stopw.start();
         if (Main.POOL == 1) {
-            for (int i = 0, r = Main.ROWS; i < Main.ITER; i++, r += Main.STEP) {
+            for (int i = 0, r = Main.ROWS; i < Main.ITRS; i++, r += Main.STEP) {
                 Main.createSpreadsheet(paths[0], paths[1], r);
             }
         } else {
             ExecutorService exc = SimpleThreadPoolExecutor.getNewExecutor(Main.POOL);
-            for (int i = 0, r = Main.ROWS; i < Main.ITER; i++, r += Main.STEP) {
+            for (int i = 0, r = Main.ROWS; i < Main.ITRS; i++, r += Main.STEP) {
                 int[] rSize = {r};
                 exc.submit(() -> { Main.createSpreadsheet(paths[0], paths[1], rSize[0]); });
             }
