@@ -21,7 +21,7 @@ public class tests {
     /**
      * This is for generating random spreadsheet sizes.
      */
-    private static final Random RANDOM = new Random(42L);
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     /** 
      * The number of rows and columns to generate for a 
@@ -68,10 +68,48 @@ public class tests {
     }
 
     @Test
+    public void testCreateCalcFiles () {
+        Creatable[] creatables = { 
+            new CompleteBipartiteSum(),
+            new MixedRangeSum(),
+            new RunningSum(),
+            new SingleCellSum(),
+            new RunningVlookup(),
+            new SingleCellVlookup() 
+        };
+
+        /** Make sure RNG path works */
+        for (Creatable c : creatables) {
+            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, new Random(42L));            
+            assertTrue(TestingUtils.allFilesExist(files));
+            TestingUtils.deleteFiles();
+        }
+
+        /** Make sure non-RNG path works */
+        for (Creatable c : creatables) {
+            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, null);            
+            assertTrue(TestingUtils.allFilesExist(files));
+            TestingUtils.deleteFiles();
+        }
+    }
+
+    @Test
     public void testCompleteBipartiteSum () {
         this.runAllIntegrationTests(new CompleteBipartiteSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(this.cols - 1), this.rows)
         );
+    }
+
+    @Test
+    public void testMixedRangeSum () {
+        this.runAllIntegrationTests(new MixedRangeSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
+            String col = CellReference.convertNumToColString(currColIdx);
+            int row = currRowIdx + 1;
+            return String.format("SUM(%s%d:%s%d) + SUM(A1:%s%d)", col, row, col, row
+                , CellReference.convertNumToColString(this.cols - 1)
+                , this.rows
+            );
+        });
     }
 
     @Test
@@ -82,30 +120,10 @@ public class tests {
     }
 
     @Test
-    public void testRunningSumAvg () {
-        this.runAllIntegrationTests(new RunningSumAvg(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> 
-            String.format("%s(A1:%s%d)"
-                , currRowIdx % 2 == 0 ? "SUM" : "AVERAGE"
-                , CellReference.convertNumToColString(this.cols - 1)
-                , currRowIdx + 1
-            )
-        );
-    }
-
-    @Test
     public void testSingleCellSum () {
         this.runAllIntegrationTests(new SingleCellSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
-        });
-    }
-
-    @Test
-    public void testSingleCellSumAvg () {
-        this.runAllIntegrationTests(new SingleCellSumAvg(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
-            String col = CellReference.convertNumToColString(currColIdx);
-            String frm = currRowIdx % 2 == 0 ? "SUM" : "AVERAGE";
-            return String.format("%s(%s%d:%s%d)", frm, col, currRowIdx + 1, col, currRowIdx + 1);
         });
     }
 
@@ -130,30 +148,4 @@ public class tests {
         });
     }
 
-    @Test
-    public void testCreateCalcFiles () {
-        Creatable[] creatables = { 
-            new CompleteBipartiteSum(),
-            new RunningSum(),
-            new RunningSumAvg(),
-            new SingleCellSum(),
-            new SingleCellSumAvg(),
-            new RunningVlookup(),
-            new SingleCellVlookup() 
-        };
-
-        /** Make sure RNG path works */
-        for (Creatable c : creatables) {
-            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, new Random(42L));            
-            assertTrue(TestingUtils.allFilesExist(files));
-            TestingUtils.deleteFiles();
-        }
-
-        /** Make sure non-RNG path works */
-        for (Creatable c : creatables) {
-            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, null);            
-            assertTrue(TestingUtils.allFilesExist(files));
-            TestingUtils.deleteFiles();
-        }
-    }
 }

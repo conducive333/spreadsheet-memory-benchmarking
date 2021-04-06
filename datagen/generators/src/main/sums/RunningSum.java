@@ -7,12 +7,14 @@ import org.apache.poi.ss.util.CellReference;
 import com.github.jferard.fastods.TableRowImpl;
 import com.github.jferard.fastods.Table;
 
+import java.util.ArrayDeque;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Deque;
 
 import creator.Creatable;
 
-public class RunningSum implements Creatable {
+public class RunningSum extends BaseSum implements Creatable {
     /**
      * Creates a spreadsheet with the following structure:
      * 
@@ -54,14 +56,12 @@ public class RunningSum implements Creatable {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
-            double[] vals = new double[cols];
-            for (int c = 0; c < cols; c++) { 
-                vals[c] = (double) rand.nextInt(rows * cols);
-                total += vals[c];
-            }
+            Deque<Double> values = new ArrayDeque<>();
+            total += super.randomlyFillDeque(values, cols, rand, rows * cols);
             for (int c = 0; c < cols; c++) {
-                fRow.createCell(c).setCellValue(vals[c]);
-                vRow.createCell(c).setCellValue(vals[c]);
+                double num = values.pop();
+                fRow.createCell(c).setCellValue(num);
+                vRow.createCell(c).setCellValue(num);
                 fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), r + 1));
                 vRow.createCell(c + cols).setCellValue(total);
             }
@@ -88,14 +88,12 @@ public class RunningSum implements Creatable {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
-            double[] vals = new double[cols];
-            for (int c = 0; c < cols; c++) { 
-                vals[c] = (double) rand.nextInt(rows * cols);
-                total += vals[c];
-            }
+            Deque<Double> values = new ArrayDeque<>();
+            total += super.randomlyFillDeque(values, cols, rand, rows * cols);
             for (int c = 0; c < cols; c++) {
-                fRow.getOrCreateCell(c).setFloatValue(vals[c]);
-                vRow.getOrCreateCell(c).setFloatValue(vals[c]);
+                double num = values.pop();
+                fRow.getOrCreateCell(c).setFloatValue(num);
+                vRow.getOrCreateCell(c).setFloatValue(num);
                 fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), r + 1));
                 vRow.getOrCreateCell(c + cols).setFloatValue(total);
             }

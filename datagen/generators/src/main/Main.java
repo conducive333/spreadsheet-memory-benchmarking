@@ -46,10 +46,9 @@ public class Main {
 
     private static Creatable resolveName (String s) {
         if (s.equals("CompleteBipartiteSum"))   return new CompleteBipartiteSum();
+        if (s.equals("MixedRangeSum"))          return new MixedRangeSum();
         if (s.equals("RunningSum"))             return new RunningSum();
-        if (s.equals("RunningSumAvg"))          return new RunningSumAvg();
         if (s.equals("SingleCellSum"))          return new SingleCellSum();
-        if (s.equals("SingleCellSumAvg"))       return new SingleCellSumAvg();
         if (s.equals("RunningVlookup"))         return new RunningVlookup();
         if (s.equals("SingleCellVlookup"))      return new SingleCellVlookup();
         return null;

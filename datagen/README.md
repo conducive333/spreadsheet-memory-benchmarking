@@ -4,10 +4,9 @@
 - This script will generate two types of spreadsheet datasets:
     1. Formula-value: A spreadsheet with both values and formulae. The layout of the spreadsheet is determined by the `INST` parmeter. Currently, the possible values are:
         - "CompleteBipartiteSum"
+        - "MixedRangeSum"
         - "RunningSum"
-        - "RunningSumAvg"
         - "SingleCellSum"
-        - "SingleCellSumAvg"
         - "RunningVlookup"
         - "SingleCellVlookup"
     

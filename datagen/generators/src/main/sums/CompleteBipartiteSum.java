@@ -14,7 +14,7 @@ import java.util.Deque;
 
 import creator.Creatable;
 
-public class CompleteBipartiteSum implements Creatable {
+public class CompleteBipartiteSum extends BaseSum implements Creatable {
     /**
      * Creates a spreadsheet with the following structure:
      * 
@@ -47,18 +47,13 @@ public class CompleteBipartiteSum implements Creatable {
                 fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
                 vRow.createCell(c + cols).setCellValue(FILL_VALUE * rows * cols);
             }
-        }   
+        }
     }
 
     @Override
     public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, Random rand) {
-        double total = 0.0;
         Deque<Double> values = new ArrayDeque<>();
-        for (int i = 0; i < rows * cols; i++) {
-            int num = rand.nextInt(rows * cols);
-            values.add((double) num);
-            total += num;
-        }
+        double total = super.randomlyFillDeque(values, rows * cols, rand, rows * cols);
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -88,13 +83,8 @@ public class CompleteBipartiteSum implements Creatable {
 
     @Override
     public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
-        double total = 0.0;
-        Deque<Integer> values = new ArrayDeque<>();
-        for (int i = 0; i < rows * cols; i++) {
-            int num = rand.nextInt(rows * cols);
-            values.add(num);
-            total += num;
-        }
+        Deque<Double> values = new ArrayDeque<>();
+        double total = super.randomlyFillDeque(values, rows * cols, rand, rows * cols);
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
