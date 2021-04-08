@@ -50,7 +50,8 @@ public class SingleCellSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, Random rand) {
+    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
+        Random rand = new Random(seed);
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -81,7 +82,8 @@ public class SingleCellSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
+        Random rand = new Random(seed);
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);

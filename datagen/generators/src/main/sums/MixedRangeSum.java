@@ -62,9 +62,9 @@ public class MixedRangeSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, Random rand) {
+    public void createRandomExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
         Deque<Double> values = new ArrayDeque<>();
-        double total = super.randomlyFillDeque(values, rows * cols, rand, rows * cols);
+        double total = super.randomlyFillDeque(values, rows * cols, new Random(seed), rows * cols);
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -115,9 +115,9 @@ public class MixedRangeSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
         Deque<Double> values = new ArrayDeque<>();
-        double total = super.randomlyFillDeque(values, rows * cols, rand, rows * cols);
+        double total = super.randomlyFillDeque(values, rows * cols, new Random(seed), rows * cols);
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);

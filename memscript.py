@@ -11,7 +11,7 @@ if __name__ == "__main__":
     CONFIG_ARGS = pymem.utils.pipeline.ConfigArgs(
         path=os.path.join("TEST", "dataset")
         , inst="CompleteBipartiteSum"
-        , rand=42
+        , seed=42
         , xlsx=True
         , step=0
         , rows=100

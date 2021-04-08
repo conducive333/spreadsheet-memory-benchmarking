@@ -6,9 +6,10 @@
         - "CompleteBipartiteSum"
         - "MixedRangeSum"
         - "RunningSum"
+        - "RunningSumWithConstant"
         - "SingleCellSum"
-        - "RunningVlookup"
-        - "SingleCellVlookup"
+        - "CompleteBipartiteVlookup"    (only 1 column supported)
+        - "SingleCellVlookup"           (only 1 column supported)
     
         **NOTE:** The values above are the names of classes in the source code. The comments of each class will show you the respective spreadsheet it will create.
 
@@ -25,7 +26,7 @@
 1. Create a file named `config` (no extension) in the root directory of the entire project (i.e. the directory where requirements.txt is). The config file should have the following fields:
     - `INST`  : The name of the class to use.
     - `PATH`  : Specifies where to create the datasets.
-    - `RAND`  : The seed to use when generating random values. If left empty, then sheets will be filled with the same placeholder value (currently set to 1).
+    - `SEED`  : The seed to use when generating random values. If left empty, then sheets will be filled with the same placeholder value (currently set to 1).
     - `XLSX`  : If true, creates `.xlsx` spreadsheets. Otherwise, creates `.ods` spreadsheets.
     - `STEP`  : The number of rows to increment by on the next iteration.
     - `ROWS`  : The starting number of rows.
@@ -39,7 +40,7 @@
 ```
 INST=CompleteBipartiteSum
 PATH=datasets
-RAND=42
+SEED=42
 XLSX=true
 STEP=1
 ROWS=100

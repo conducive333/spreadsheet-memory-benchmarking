@@ -1,11 +1,10 @@
 import java.util.concurrent.ExecutorService;
 import java.io.FileInputStream;
+import java.util.OptionalLong;
+import java.util.Properties;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.io.File;
-
-import java.util.Properties;
-import java.util.Random;
 
 import vlookups.*;
 import creator.*;
@@ -14,46 +13,63 @@ import sums.*;
 
 public class Main {
 
-    private static Creatable  INST;
-    private static Path       PATH;
-    private static Random     RAND;
-    private static boolean    XLSX;
-    private static int        STEP;
-    private static int        ROWS;
-    private static int        COLS;
-    private static int        ITRS;
-    private static int        POOL;
+    private static final Creatable      INST;
+    private static final Path           PATH;
+    private static final OptionalLong   SEED;
+    private static final boolean        XLSX;
+    private static final int            STEP;
+    private static final int            ROWS;
+    private static final int            COLS;
+    private static final int            ITRS;
+    private static final int            POOL;
 
     static {
-        try {
-            FileInputStream in  = new FileInputStream("config");
-            Properties      pr  = new Properties();
-            pr.load(in);
-            INST = Main.resolveName(pr.getProperty("INST"));
-            PATH = Path.of(pr.getProperty("PATH"));
-            RAND = pr.getProperty("RAND").length() == 0 ? null : new Random(Long.parseLong(pr.getProperty("RAND")));
-            XLSX = Boolean.parseBoolean(pr.getProperty("XLSX"));
-            STEP = Integer.parseInt(pr.getProperty("STEP"));
-            ROWS = Integer.parseInt(pr.getProperty("ROWS"));
-            COLS = Integer.parseInt(pr.getProperty("COLS"));
-            ITRS = Integer.parseInt(pr.getProperty("ITRS"));
-            POOL = Integer.parseInt(pr.getProperty("POOL"));
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Properties pr = new Properties();
+        try(FileInputStream in = new FileInputStream("config")) { pr.load(in); }
+        catch (IOException e) { e.printStackTrace(); System.exit(1); }
+        PATH = Path.of(pr.getProperty("PATH"));
+        INST = Main.resolveName(pr.getProperty("INST"));
+        SEED = Main.resolveSeed(pr.getProperty("SEED"));
+        STEP = Integer.parseInt(pr.getProperty("STEP"));
+        ROWS = Integer.parseInt(pr.getProperty("ROWS"));
+        COLS = Integer.parseInt(pr.getProperty("COLS"));
+        ITRS = Integer.parseInt(pr.getProperty("ITRS"));
+        POOL = Integer.parseInt(pr.getProperty("POOL"));
+        XLSX = Boolean.parseBoolean(pr.getProperty("XLSX"));
     }
 
+    /**
+     * @param s
+     * @return The spreadsheet creator corresponding to `s`.
+     */
     private static Creatable resolveName (String s) {
-        if (s.equals("CompleteBipartiteSum"))   return new CompleteBipartiteSum();
-        if (s.equals("MixedRangeSum"))          return new MixedRangeSum();
-        if (s.equals("RunningSum"))             return new RunningSum();
-        if (s.equals("SingleCellSum"))          return new SingleCellSum();
-        if (s.equals("RunningVlookup"))         return new RunningVlookup();
-        if (s.equals("SingleCellVlookup"))      return new SingleCellVlookup();
+        if (s.equals("CompleteBipartiteSum"))       return new CompleteBipartiteSum();
+        if (s.equals("MixedRangeSum"))              return new MixedRangeSum();
+        if (s.equals("RunningSum"))                 return new RunningSum();
+        if (s.equals("RunningSumWithConstant"))     return new RunningSumWithConstant();
+        if (s.equals("SingleCellSum"))              return new SingleCellSum();
+        if (s.equals("CompleteBipartiteVlookup"))   return new CompleteBipartiteVlookup();
+        if (s.equals("SingleCellVlookup"))          return new SingleCellVlookup();
         return null;
     }
 
+    /**
+     * @param s
+     * @return An OptionalLong containing `s` interpreted as a 
+     * long. If `s` is empty, returns an empty OptionalLong.
+     */
+    private static OptionalLong resolveSeed (String s) {
+        if (s.length() == 0) {
+            return OptionalLong.empty();
+        }
+        return OptionalLong.of(Long.parseLong(s));
+    }
+
+    /**
+     * @return An array of strings, ARR, where ARR[0] is the path
+     * to the formula-value directory and ARR[1] is the path to 
+     * the value-only directory.
+     */
     private static String[] createDirectories () {
         File vDir = Path.of(Main.PATH.toString(), "value-only"   ).toFile();
         File fDir = Path.of(Main.PATH.toString(), "formula-value").toFile();
@@ -62,12 +78,19 @@ public class Main {
         return new String[] { fDir.toString(), vDir.toString() };
     }
 
+    /**
+     * A wrapper method for creating spreadsheets.
+     * 
+     * @param fPath
+     * @param vPath
+     * @param rows
+     */
     private static void createSpreadsheet (String fPath, String vPath, int rows) {
         System.out.println("Creating a sheet with " + rows + " row(s)");
         if (Main.XLSX) {
-            Creator.createExcelSheet(Main.INST, fPath, vPath, rows, Main.COLS, Main.RAND);
+            Creator.createExcelSheet(Main.INST, fPath, vPath, rows, Main.COLS, Main.SEED);
         } else {
-            Creator.createCalcSheet(Main.INST, fPath, vPath, rows, Main.COLS, Main.RAND);
+            Creator.createCalcSheet(Main.INST, fPath, vPath, rows, Main.COLS, Main.SEED);
         }
     }
 

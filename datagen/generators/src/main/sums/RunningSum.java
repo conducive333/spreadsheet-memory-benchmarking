@@ -51,13 +51,13 @@ public class RunningSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, Random rand) {
+    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
         double total = 0.0;
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
             Deque<Double> values = new ArrayDeque<>();
-            total += super.randomlyFillDeque(values, cols, rand, rows * cols);
+            total += super.randomlyFillDeque(values, cols, new Random(seed), rows * cols);
             for (int c = 0; c < cols; c++) {
                 double num = values.pop();
                 fRow.createCell(c).setCellValue(num);
@@ -83,13 +83,13 @@ public class RunningSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, Random rand) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
         double total = 0.0;
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
             Deque<Double> values = new ArrayDeque<>();
-            total += super.randomlyFillDeque(values, cols, rand, rows * cols);
+            total += super.randomlyFillDeque(values, cols, new Random(seed), rows * cols);
             for (int c = 0; c < cols; c++) {
                 double num = values.pop();
                 fRow.getOrCreateCell(c).setFloatValue(num);

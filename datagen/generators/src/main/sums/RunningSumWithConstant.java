@@ -14,16 +14,16 @@ import java.util.Deque;
 
 import creator.Creatable;
 
-public class CompleteBipartiteSum extends BaseSum implements Creatable {
+public class RunningSumWithConstant extends BaseSum implements Creatable {
     /**
      * Creates a spreadsheet with the following structure:
      * 
-     * 0    |   A   |       B       |
-     * ------------------------------
-     * 1    |   ?   |   =SUM(A1:AN) |
-     * 2    |   ?   |   =SUM(A1:AN) |
-     * ...  |   ... |   ...         |
-     * N    |   ?   |   =SUM(A1:AN) |
+     * 0    |   A   |       B           |
+     * ----------------------------------
+     * 1    |   ?   |   =SUM(A1:AN) + 1 |   
+     * 2    |   ?   |   =SUM(A1:AN) + 2 |
+     * ...  |   ... |   ...             |
+     * N    |   ?   |   =SUM(A1:AN) + N |
      * 
      * ? = a random value (or a placeholder value if no
      * random seed is specified). The COLS parameter 
@@ -34,24 +34,24 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
      */
 
     private static final double FILL_VALUE = 1.0;
-    private static final String CREATE_STR = "SUM(A1:%s%d)";
+    private static final String CREATE_STR = "SUM(A1:%s%d) + %d";
 
     @Override
-    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
+    public void createExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
             for (int c = 0; c < cols; c++) {
                 fRow.createCell(c).setCellValue(FILL_VALUE);
                 vRow.createCell(c).setCellValue(FILL_VALUE);
-                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.createCell(c + cols).setCellValue(FILL_VALUE * rows * cols);
+                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows, r + 1));
+                vRow.createCell(c + cols).setCellValue((FILL_VALUE * rows * cols) + (r + 1));
             }
         }
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
+    public void createRandomExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
         Deque<Double> values = new ArrayDeque<>();
         double total = super.randomlyFillDeque(values, rows * cols, new Random(seed), rows * cols);
         for (int r = 0; r < rows; r++) {
@@ -61,8 +61,8 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
                 double num = values.pop();
                 fRow.createCell(c).setCellValue(num);
                 vRow.createCell(c).setCellValue(num);
-                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.createCell(c + cols).setCellValue(total);
+                fRow.createCell(c + cols).setCellFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows, r + 1));
+                vRow.createCell(c + cols).setCellValue(total + (r + 1));
             }
         }
     }
@@ -75,8 +75,8 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
             for (int c = 0; c < cols; c++) {
                 fRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
                 vRow.getOrCreateCell(c).setFloatValue(FILL_VALUE);
-                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.getOrCreateCell(c + cols).setFloatValue(FILL_VALUE * rows * cols);
+                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows, r + 1));
+                vRow.getOrCreateCell(c + cols).setFloatValue((FILL_VALUE * rows * cols) + (r + 1));
             }
         }
     }
@@ -92,10 +92,10 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
                 double num = values.pop();
                 fRow.getOrCreateCell(c).setFloatValue(num);
                 vRow.getOrCreateCell(c).setFloatValue(num);
-                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows));
-                vRow.getOrCreateCell(c + cols).setFloatValue(total);
+                fRow.getOrCreateCell(c + cols).setFormula(String.format(CREATE_STR, CellReference.convertNumToColString(cols - 1), rows, r + 1));
+                vRow.getOrCreateCell(c + cols).setFloatValue(total + (r + 1));
             }
         }
     }
-
+    
 }

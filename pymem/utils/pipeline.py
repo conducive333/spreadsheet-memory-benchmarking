@@ -10,10 +10,10 @@ import os
 from . import definitions
 
 class ConfigArgs:
-    def __init__(self, path, inst, rand, xlsx, step, rows, cols, itrs, pool):
+    def __init__(self, path, inst, seed, xlsx, step, rows, cols, itrs, pool):
         self.path = path
         self.inst = inst
-        self.rand = rand
+        self.seed = seed
         self.xlsx = xlsx
         self.step = step
         self.rows = rows
@@ -84,7 +84,7 @@ def create_datasets(config_args):
         config_args_path = pathlib.Path(config_args.path).as_posix()
         f.write(f"INST={config_args.inst}\n")
         f.write(f"PATH={config_args_path}\n")
-        f.write(f"RAND={config_args.rand}\n")
+        f.write(f"SEED={config_args.seed}\n")
         f.write(f"XLSX={config_args.xlsx}\n")
         f.write(f"STEP={config_args.step}\n")
         f.write(f"ROWS={config_args.rows}\n")

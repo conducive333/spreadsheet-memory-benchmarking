@@ -14,14 +14,14 @@ import java.nio.file.Path;
 import java.io.File;
 
 import java.util.logging.Logger;
+import java.util.OptionalLong;
 import java.util.Locale;
-import java.util.Random;
 
 public abstract class Creator {
 
     private static final OdsFactory odsFactory = OdsFactory.create(Logger.getLogger("logger"), Locale.US);
 
-    public static void createExcelSheet (Creatable createable, String fPath, String vPath, int rows, int cols, Random rand) {
+    public static void createExcelSheet (Creatable createable, String fPath, String vPath, int rows, int cols, OptionalLong seed) {
         try (SXSSFWorkbook fWorkbook = new SXSSFWorkbook(1); SXSSFWorkbook vWorkbook = new SXSSFWorkbook(1)) {
             String fName = Path.of(fPath, "fv-" + rows + ".xlsx").toString();
             String vName = Path.of(vPath, "vo-" + rows + ".xlsx").toString();
@@ -30,8 +30,8 @@ public abstract class Creator {
                 vWorkbook.setCompressTempFiles(true);
                 SXSSFSheet fSheet = fWorkbook.createSheet("Sheet1");
                 SXSSFSheet vSheet = vWorkbook.createSheet("Sheet1");
-                if (rand != null) {
-                    createable.createRandomExcelSheet(fSheet, vSheet, rows, cols, rand);
+                if (seed.isPresent()) {
+                    createable.createRandomExcelSheet(fSheet, vSheet, rows, cols, seed.getAsLong());
                 } else {
                     createable.createExcelSheet(fSheet, vSheet, rows, cols);
                 }
@@ -45,7 +45,7 @@ public abstract class Creator {
         }
     }
 
-    public static void createCalcSheet (Creatable createable, String fPath, String vPath, int rows, int cols, Random rand) {
+    public static void createCalcSheet (Creatable createable, String fPath, String vPath, int rows, int cols, OptionalLong seed) {
         File fName = Path.of(fPath, "fv-" + rows + ".ods").toFile();
         File vName = Path.of(vPath, "vo-" + rows + ".ods").toFile();
         if (!fName.exists() || !vName.exists()) {
@@ -54,8 +54,8 @@ public abstract class Creator {
                 final AnonymousOdsFileWriter vWriter = Creator.odsFactory.createWriter();
                 Table fSheet = fWriter.document().addTable("Sheet1");
                 Table vSheet = vWriter.document().addTable("Sheet1");
-                if (rand != null) {
-                    createable.createRandomCalcSheet(fSheet, vSheet, rows, cols, rand);
+                if (seed.isPresent()) {
+                    createable.createRandomCalcSheet(fSheet, vSheet, rows, cols, seed.getAsLong());
                 } else {
                     createable.createCalcSheet(fSheet, vSheet, rows, cols);
                 }

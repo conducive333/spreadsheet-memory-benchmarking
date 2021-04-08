@@ -9,6 +9,7 @@ import testutils.CalcTestingUtils;
 import testutils.TestingUtils;
 
 import java.util.function.BiFunction;
+import java.util.OptionalLong;
 import java.util.Random;
 import java.io.File;
 
@@ -21,14 +22,14 @@ public class tests {
     /**
      * This is for generating random spreadsheet sizes.
      */
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
+    private static final Random RANDOM = new Random(42L);
 
     /** 
      * The number of rows and columns to generate for a 
      * test spreadsheet is chosen between 1 (inclusive)
      * and the number below (exclusive).
      */
-    private static final int EXCLUSIVE_UPPER_BOUND = 5;
+    private static final int EXCLUSIVE_UPPER_BOUND = 10;
 
     /**
      * The number of rows and columns to use. These are 
@@ -52,19 +53,23 @@ public class tests {
         TestingUtils.deleteDirectories();
     }
 
-    private void testEmpty (Creatable creatable, Random rand, BiFunction<Integer, Integer, String> getExpectedFormula) {
-        ExcelTestingUtils.integrationTest(creatable, 0, 0, null, getExpectedFormula);
-        ExcelTestingUtils.integrationTest(creatable, 0, 0, rand, getExpectedFormula);
-        CalcTestingUtils.integrationTest(creatable, 0, 0, null, getExpectedFormula);
-        CalcTestingUtils.integrationTest(creatable, 0, 0, rand, getExpectedFormula);
+    private void testEmpty (Creatable creatable, long seed, BiFunction<Integer, Integer, String> getExpectedExcelFormula, BiFunction<Integer, Integer, String> getExpectedCalcFormula) {
+        ExcelTestingUtils.integrationTest(creatable, 0, 0, 0, 0, OptionalLong.empty(), getExpectedExcelFormula);
+        ExcelTestingUtils.integrationTest(creatable, 0, 0, 0, 0, OptionalLong.of(seed), getExpectedExcelFormula);
+        CalcTestingUtils.integrationTest(creatable, 0, 0, 0, 0, OptionalLong.empty(), getExpectedCalcFormula);
+        CalcTestingUtils.integrationTest(creatable, 0, 0, 0, 0, OptionalLong.of(seed), getExpectedCalcFormula);
     }
 
-    private void runAllIntegrationTests (Creatable creatable, int rows, int cols, Random rand, BiFunction<Integer, Integer, String> getExpectedFormula) {
-        this.testEmpty(creatable, rand, getExpectedFormula);
-        ExcelTestingUtils.integrationTest(creatable, rows, cols, null, getExpectedFormula);
-        ExcelTestingUtils.integrationTest(creatable, rows, cols, rand, getExpectedFormula);
-        CalcTestingUtils.integrationTest(creatable, rows, cols, null, getExpectedFormula);
-        CalcTestingUtils.integrationTest(creatable, rows, cols, rand, getExpectedFormula);
+    private void runAllIntegrationTests (Creatable creatable, int rows, int expectedRows, int cols, int expectedCols, long seed, BiFunction<Integer, Integer, String> getExpectedExcelFormula, BiFunction<Integer, Integer, String> getExpectedCalcFormula) {
+        this.testEmpty(creatable, seed, getExpectedExcelFormula, getExpectedCalcFormula);
+        ExcelTestingUtils.integrationTest(creatable, rows, expectedRows, cols, expectedCols, OptionalLong.empty(), getExpectedExcelFormula);
+        ExcelTestingUtils.integrationTest(creatable, rows, expectedRows, cols, expectedCols, OptionalLong.of(seed), getExpectedExcelFormula);
+        CalcTestingUtils.integrationTest(creatable, rows, expectedRows, cols, expectedCols, OptionalLong.empty(), getExpectedCalcFormula);
+        CalcTestingUtils.integrationTest(creatable, rows, expectedRows, cols, expectedCols, OptionalLong.of(seed), getExpectedCalcFormula);
+    }
+
+    private void runAllIntegrationTests (Creatable creatable, int rows, int expectedRows, int cols, int expectedCols, long seed, BiFunction<Integer, Integer, String> getExpectedFormula) {
+        this.runAllIntegrationTests(creatable, rows, expectedRows, cols, expectedCols, seed, getExpectedFormula, getExpectedFormula);
     }
 
     @Test
@@ -73,21 +78,22 @@ public class tests {
             new CompleteBipartiteSum(),
             new MixedRangeSum(),
             new RunningSum(),
+            new RunningSumWithConstant(),
             new SingleCellSum(),
-            new RunningVlookup(),
+            new CompleteBipartiteVlookup(),
             new SingleCellVlookup() 
         };
 
-        /** Make sure RNG path works */
+        /** Check if RNG path works */
         for (Creatable c : creatables) {
-            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, new Random(42L));            
+            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, OptionalLong.of(42L));            
             assertTrue(TestingUtils.allFilesExist(files));
             TestingUtils.deleteFiles();
         }
 
-        /** Make sure non-RNG path works */
+        /** Check if non-RNG path works */
         for (Creatable c : creatables) {
-            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, null);            
+            File[] files = CalcTestingUtils.createCalcFiles(c, rows, cols, OptionalLong.empty());            
             assertTrue(TestingUtils.allFilesExist(files));
             TestingUtils.deleteFiles();
         }
@@ -95,14 +101,14 @@ public class tests {
 
     @Test
     public void testCompleteBipartiteSum () {
-        this.runAllIntegrationTests(new CompleteBipartiteSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
+        this.runAllIntegrationTests(new CompleteBipartiteSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(this.cols - 1), this.rows)
         );
     }
 
     @Test
     public void testMixedRangeSum () {
-        this.runAllIntegrationTests(new MixedRangeSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
+        this.runAllIntegrationTests(new MixedRangeSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             int row = currRowIdx + 1;
             return String.format("SUM(%s%d:%s%d) + SUM(A1:%s%d)", col, row, col, row
@@ -114,38 +120,40 @@ public class tests {
 
     @Test
     public void testRunningSum () {
-        this.runAllIntegrationTests(new RunningSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
+        this.runAllIntegrationTests(new RunningSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(this.cols - 1), currRowIdx + 1)
         );
     }
 
     @Test
+    public void testRunningSumWithConstant() {
+        this.runAllIntegrationTests(new RunningSumWithConstant(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx)
+            -> String.format("SUM(A1:%s%d) + %d", CellReference.convertNumToColString(this.cols - 1), this.rows, currRowIdx + 1)
+        );
+    }
+
+    @Test
     public void testSingleCellSum () {
-        this.runAllIntegrationTests(new SingleCellSum(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> {
+        this.runAllIntegrationTests(new SingleCellSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
         });
     }
 
     @Test
-    public void testRunningVlookup () {
-        this.runAllIntegrationTests(new RunningVlookup(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) 
-            -> String.format("VLOOKUP(A%d, A1:%s%d, %d, FALSE)"
-                , currRowIdx + 1
-                , CellReference.convertNumToColString(this.cols - 1)
-                , currRowIdx + 1
-                , this.cols
-            )
+    public void testCompleteBipartiteVlookup () {
+        this.runAllIntegrationTests(new CompleteBipartiteVlookup(), this.rows, this.rows, 1, 3, 42L
+            , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d, A1:A%d, 1, FALSE)", currRowIdx + 1, this.rows)
+            , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d; A1:A%d; 1; 0)"    , currRowIdx + 1, this.rows)
         );
     }
 
     @Test
     public void testSingleCellVlookup () {
-        this.runAllIntegrationTests(new SingleCellVlookup(), this.rows, this.cols, new Random(42L), (currRowIdx, currColIdx) -> { 
-            String col = CellReference.convertNumToColString(currColIdx);
-            int row = currRowIdx + 1;
-            return String.format("VLOOKUP(%s%d, %s%d:%s%d, 1, FALSE)", col, row, col, row, col, row);
-        });
+        this.runAllIntegrationTests(new SingleCellVlookup(), this.rows, this.rows, 1, 3, 42L
+            , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%1$d, A%1$d:A%1$d, 1, FALSE)" , currRowIdx + 1)
+            , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%1$d; A%1$d:A%1$d; 1; 0)"     , currRowIdx + 1)
+        );
     }
 
 }
