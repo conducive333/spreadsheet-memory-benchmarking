@@ -49,17 +49,16 @@ public class SingleCellVlookup extends BaseVlookup implements Creatable {
 
     @Override
     public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
-        List<Double> vals = super.getShuffledConsecutiveNumbers(new Random(seed + 0), rows);
-        List<Double> look = super.getShuffledConsecutiveNumbers(new Random(seed + 1), rows);
+        List<Double> vals = super.getShuffledConsecutiveNumbers(new Random(seed), rows);
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
             fRow.createCell(0).setCellValue(vals.get(r));
             vRow.createCell(0).setCellValue(vals.get(r));
             fRow.createCell(1).setCellFormula(String.format(EXCEL_FSTR, r + 1));
-            vRow.createCell(1).setCellValue(look.get(r));
-            fRow.createCell(2).setCellValue(look.get(r));
-            vRow.createCell(2).setCellValue(look.get(r));
+            vRow.createCell(1).setCellValue(vals.get(r));
+            fRow.createCell(2).setCellValue(vals.get(r));
+            vRow.createCell(2).setCellValue(vals.get(r));
         }
     }
 
@@ -79,17 +78,16 @@ public class SingleCellVlookup extends BaseVlookup implements Creatable {
 
     @Override
     public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
-        List<Double> vals = super.getShuffledConsecutiveNumbers(new Random(seed + 0), rows);
-        List<Double> look = super.getShuffledConsecutiveNumbers(new Random(seed + 1), rows);
+        List<Double> vals = super.getShuffledConsecutiveNumbers(new Random(seed), rows);
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
             fRow.getOrCreateCell(0).setFloatValue(vals.get(r));
             vRow.getOrCreateCell(0).setFloatValue(vals.get(r));
             fRow.getOrCreateCell(1).setFormula(String.format(LIBRE_FSTR, r + 1));
-            vRow.getOrCreateCell(1).setFloatValue(look.get(r));
-            fRow.getOrCreateCell(2).setFloatValue(look.get(r));
-            vRow.getOrCreateCell(2).setFloatValue(look.get(r));
+            vRow.getOrCreateCell(1).setFloatValue(vals.get(r));
+            fRow.getOrCreateCell(2).setFloatValue(vals.get(r));
+            vRow.getOrCreateCell(2).setFloatValue(vals.get(r));
         }
     }
     

@@ -43,13 +43,13 @@ public class Main {
      * @return The spreadsheet creator corresponding to `s`.
      */
     private static Creatable resolveName (String s) {
-        if (s.equals("CompleteBipartiteSum"))       return new CompleteBipartiteSum();
-        if (s.equals("MixedRangeSum"))              return new MixedRangeSum();
-        if (s.equals("RunningSum"))                 return new RunningSum();
-        if (s.equals("RunningSumWithConstant"))     return new RunningSumWithConstant();
-        if (s.equals("SingleCellSum"))              return new SingleCellSum();
-        if (s.equals("CompleteBipartiteVlookup"))   return new CompleteBipartiteVlookup();
-        if (s.equals("SingleCellVlookup"))          return new SingleCellVlookup();
+        if (s.equals("CompleteBipartiteSum"))               return new CompleteBipartiteSum();
+        if (s.equals("CompleteBipartiteSumWithConstant"))   return new CompleteBipartiteSumWithConstant();
+        if (s.equals("MixedRangeSum"))                      return new MixedRangeSum();
+        if (s.equals("RunningSum"))                         return new RunningSum();
+        if (s.equals("SingleCellSum"))                      return new SingleCellSum();
+        if (s.equals("CompleteBipartiteVlookup"))           return new CompleteBipartiteVlookup();
+        if (s.equals("SingleCellVlookup"))                  return new SingleCellVlookup();
         return null;
     }
 

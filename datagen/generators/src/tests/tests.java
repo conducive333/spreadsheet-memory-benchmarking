@@ -78,7 +78,7 @@ public class tests {
             new CompleteBipartiteSum(),
             new MixedRangeSum(),
             new RunningSum(),
-            new RunningSumWithConstant(),
+            new CompleteBipartiteSumWithConstant(),
             new SingleCellSum(),
             new CompleteBipartiteVlookup(),
             new SingleCellVlookup() 
@@ -107,6 +107,13 @@ public class tests {
     }
 
     @Test
+    public void testCompleteBipartiteSumWithConstant() {
+        this.runAllIntegrationTests(new CompleteBipartiteSumWithConstant(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx)
+            -> String.format("SUM(A1:%s%d) + %d", CellReference.convertNumToColString(this.cols - 1), this.rows, currRowIdx + 1)
+        );
+    }
+
+    @Test
     public void testMixedRangeSum () {
         this.runAllIntegrationTests(new MixedRangeSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
@@ -122,13 +129,6 @@ public class tests {
     public void testRunningSum () {
         this.runAllIntegrationTests(new RunningSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(this.cols - 1), currRowIdx + 1)
-        );
-    }
-
-    @Test
-    public void testRunningSumWithConstant() {
-        this.runAllIntegrationTests(new RunningSumWithConstant(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx)
-            -> String.format("SUM(A1:%s%d) + %d", CellReference.convertNumToColString(this.cols - 1), this.rows, currRowIdx + 1)
         );
     }
 

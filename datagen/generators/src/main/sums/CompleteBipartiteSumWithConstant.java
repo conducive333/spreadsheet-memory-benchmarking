@@ -14,7 +14,7 @@ import java.util.Deque;
 
 import creator.Creatable;
 
-public class RunningSumWithConstant extends BaseSum implements Creatable {
+public class CompleteBipartiteSumWithConstant extends BaseSum implements Creatable {
     /**
      * Creates a spreadsheet with the following structure:
      * 
