@@ -43,3 +43,4 @@
 
 ## Notes
 - This code is intended to be run on a Windows machine. Errors may appear on other systems.
+- When benchmarking an application, please be sure not to open it while the tests are running. This may interfere with results.
