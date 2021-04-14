@@ -46,9 +46,12 @@ public class Main {
         if (s.equals("CompleteBipartiteSum"))               return new CompleteBipartiteSum();
         if (s.equals("CompleteBipartiteSumWithConstant"))   return new CompleteBipartiteSumWithConstant();
         if (s.equals("MixedRangeSum"))                      return new MixedRangeSum();
+        if (s.equals("NoEdgeSum"))                          return new NoEdgeSum();        
+        if (s.equals("OverlappingSum"))                     return new OverlappingSum();
         if (s.equals("RunningSum"))                         return new RunningSum();
         if (s.equals("SingleCellSum"))                      return new SingleCellSum();
         if (s.equals("CompleteBipartiteVlookup"))           return new CompleteBipartiteVlookup();
+        if (s.equals("SameCellVlookup"))                    return new SameCellVlookup();
         if (s.equals("SingleCellVlookup"))                  return new SingleCellVlookup();
         return null;
     }

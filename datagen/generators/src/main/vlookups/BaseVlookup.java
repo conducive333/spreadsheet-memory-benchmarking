@@ -7,6 +7,8 @@ import java.util.List;
 
 public abstract class BaseVlookup {
 
+    protected static final double FILL_VALUE = 1.0;
+
     /**
      * Creates a list from [0, `size`) and shuffles its ordering.
      * 

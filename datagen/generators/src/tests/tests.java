@@ -77,6 +77,8 @@ public class tests {
         Creatable[] creatables = { 
             new CompleteBipartiteSum(),
             new MixedRangeSum(),
+            new NoEdgeSum(),
+            new OverlappingSum(),
             new RunningSum(),
             new CompleteBipartiteSumWithConstant(),
             new SingleCellSum(),
@@ -126,6 +128,53 @@ public class tests {
     }
 
     @Test
+    public void testNoEdgeSum () {
+        
+        final long seed = 42;
+        
+        // Same as FILL_VALUE in BaseSum
+        final double fillValue = 1.0;
+        
+        // These will be refreshed after each integration test
+        Random[]    rand = { null };
+        int[]       rows = { 0 };
+
+        this.runAllIntegrationTests(new NoEdgeSum(), this.rows, this.rows, this.cols, this.cols * 2, seed, (currRowIdx, currColIdx) -> {
+            
+            // This will be true once we perform one integration test.
+            // Integration tests alternate between non-random and random
+            // sheets, so we need to reset these values after each test.
+            if (rows[0] == this.rows * this.cols) {
+                rand[0] = (rand[0] == null ? new Random(seed) : null);
+                rows[0] = 0;
+            }
+
+            // Return the correct formula for the corresponding integration
+            // test.
+            rows[0]++;
+            if (rand[0] != null) {
+                return String.format("SUM(%f)", (double) rand[0].nextInt(this.rows * this.cols));
+            } else {
+                return String.format("SUM(%f)", fillValue);
+            }
+            
+        });
+    }
+
+    @Test
+    public void testOverlappingSum () {
+        final int windowSize = 2;
+        this.runAllIntegrationTests(new OverlappingSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) 
+            -> String.format("SUM(%s%d:%s%d)"
+                , CellReference.convertNumToColString(currColIdx)
+                , currRowIdx + 1
+                , CellReference.convertNumToColString(currColIdx)
+                , currRowIdx + windowSize
+            )
+        );
+    }
+
+    @Test
     public void testRunningSum () {
         this.runAllIntegrationTests(new RunningSum(), this.rows, this.rows, this.cols, this.cols * 2, 42L, (currRowIdx, currColIdx) 
             -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(this.cols - 1), currRowIdx + 1)
@@ -146,6 +195,18 @@ public class tests {
             , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d, A1:A%d, 1, FALSE)", currRowIdx + 1, this.rows)
             , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d; A1:A%d; 1; 0)"    , currRowIdx + 1, this.rows)
         );
+    }
+
+    @Test
+    public void testSameCellVlookup () {
+        // NOTE: This sheet creator will always create sheets with #N/A values, which makes it 
+        // difficult to test. With that in mind, these types of sheets should be inspected manually.
+
+        // // Sample testing code:
+        // this.runAllIntegrationTests(new SameCellVlookup(), this.rows, this.rows, 1, 3, 42L
+        //     , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d, A1:A1, 1, FALSE)", currRowIdx + 1)
+        //     , (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d; A1:A1; 1; 0)"    , currRowIdx + 1)
+        // );
     }
 
     @Test

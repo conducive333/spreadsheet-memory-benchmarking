@@ -33,7 +33,6 @@ public class RunningSum extends BaseSum implements Creatable {
      * and 2 columns of formulae.
      */
 
-    private static final double FILL_VALUE = 1.0;
     private static final String CREATE_STR = "SUM(A1:%s%d)";
 
     @Override

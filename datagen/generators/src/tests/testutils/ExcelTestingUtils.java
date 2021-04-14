@@ -71,8 +71,8 @@ public class ExcelTestingUtils extends TestingUtils {
             for (Row row : fWorkbook.getSheetAt(0)) {
                 assertEquals(expectedCols, row.getPhysicalNumberOfCells());
                 for (int c = 0; c < cols; c++) {
-                    assertNotNull(row.getCell(c));
-                    assertNotNull(row.getCell(c + cols));
+                    assertCellIsNotNull(row, c);
+                    assertCellIsNotNull(row, c + cols);
                     checkExcelNumericCell(row.getCell(c), seed, 0, rows * cols);
                     checkExcelFormulaCell(row.getCell(c + cols), getExpectedFormula.apply(row.getRowNum(), c));
                 }
@@ -96,9 +96,7 @@ public class ExcelTestingUtils extends TestingUtils {
                     assertEquals(fRow.getPhysicalNumberOfCells(), vRow.getPhysicalNumberOfCells());
                     for (int c = 0; c < cols; c++) {
                         assertCellIsNotNull(vRow, c);
-                        assertCellIsNotNull(fRow, c);
                         assertCellIsNotNull(vRow, c + cols);
-                        assertCellIsNotNull(fRow, c + cols);
                         checkIfCellsAreEqual(evaluator, vRow.getCell(c)        , fRow.getCell(c));
                         checkIfCellsAreEqual(evaluator, vRow.getCell(c + cols) , fRow.getCell(c + cols));
                     }
@@ -113,19 +111,19 @@ public class ExcelTestingUtils extends TestingUtils {
     }
 
     private static void assertCellIsNotNull (Row row, int col) {
-        assertTrue(
+        assertNotNull(
             String.format("Found null cell at row index %d and column index %d"
                 , row.getRowNum()
                 , col
             )
-            , row.getCell(col) != null
+            , row.getCell(col)
         );
     }
 
     private static double tryToGetNumericValue (Cell cell) {
-        assertEquals("Numeric value not found at " + cell.getAddress(), cell.getCellType(), CellType.NUMERIC);
+        assertEquals(String.format("Numeric value not found at %s", cell.getAddress()), cell.getCellType(), CellType.NUMERIC);
         try { return cell.getNumericCellValue(); }
-        catch (NumberFormatException e) { fail("Cell " + cell.getAddress() + " does not contain a parsable double: " + cell.getStringCellValue()); }
+        catch (NumberFormatException e) { fail(String.format("Cell %s does not contain a parsable double: %s",  cell.getAddress(), cell.getStringCellValue())); }
         return Double.NaN;
     }
 
@@ -137,9 +135,9 @@ public class ExcelTestingUtils extends TestingUtils {
             assertTrue(String.format("Value-only cell (%s=%f) does not match formula-value cell (%s=%f)",  vCell.getAddress(), vVal, fCell.getAddress(), fVal), vVal == fVal);
         } else {
             if (fCell.getCellType() == CellType.FORMULA) {
-                System.out.println("WARNING POI could not evaluate " + fCell.getCellFormula() + ". It is recommended to check this test case's sheet creator manually.");
+                System.out.println("WARNING: POI could not evaluate " + fCell.getCellFormula() + ". It is recommended to check this test case's sheet creator manually.");
             } else {
-                fail("Found unexpected item at %s " + fCell.getAddress() + ": " + evaluator.evaluate(fCell).toString());
+                fail(String.format("Found unexpected item at %s: %s", fCell.getAddress(), evaluator.evaluate(fCell).toString()));
             }
         }
     }
@@ -147,7 +145,7 @@ public class ExcelTestingUtils extends TestingUtils {
     private static void checkExcelNumericCell (Cell cell, OptionalLong seed, double inclusiveLowerBound, double exclusiveUpperBound) {
         double v = tryToGetNumericValue(cell);
         if (seed.isPresent()) {
-            assertTrue(v + " is not in [" + inclusiveLowerBound + ", " + exclusiveUpperBound + ")", v >= inclusiveLowerBound && v < exclusiveUpperBound);
+            assertTrue(String.format("%f is not in [%f, %f)", v, inclusiveLowerBound, exclusiveUpperBound), v >= inclusiveLowerBound && v < exclusiveUpperBound);
         }
     }
 

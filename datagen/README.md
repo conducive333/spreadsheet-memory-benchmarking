@@ -6,9 +6,12 @@
         - "CompleteBipartiteSum"
         - "CompleteBipartiteSumWithConstant"
         - "MixedRangeSum"
+        - "NoEdgeSum"
+        - "OverlappingSum"
         - "RunningSum"
         - "SingleCellSum"
         - "CompleteBipartiteVlookup"    (only 1 column supported)
+        - "SameCellVlookup"             (only 1 column supported, experimental)
         - "SingleCellVlookup"           (only 1 column supported)
     
         **NOTE:** The values above are the names of classes in the source code. The comments of each class will show you the respective spreadsheet it will create.

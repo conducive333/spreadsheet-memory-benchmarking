@@ -12,7 +12,7 @@ import java.util.Random;
 
 import creator.Creatable;
 
-public class SingleCellSum implements Creatable {
+public class SingleCellSum extends BaseSum implements Creatable {
     /**
      * Creates a spreadsheet with the following structure:
      * 
@@ -31,7 +31,6 @@ public class SingleCellSum implements Creatable {
      * and 2 columns of formulae.
      */
 
-    private static final double FILL_VALUE = 1.0;
     private static final String CREATE_STR = "SUM(%s%d:%s%d)";
 
     @Override

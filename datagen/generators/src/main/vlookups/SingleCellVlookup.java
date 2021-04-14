@@ -29,7 +29,6 @@ public class SingleCellVlookup extends BaseVlookup implements Creatable {
      * A will be in the same order as the values in column C.
      */
 
-    private static final double FILL_VALUE = 1.0;
     private static final String EXCEL_FSTR = "VLOOKUP(C%1$d, A%1$d:A%1$d, 1, FALSE)";
     private static final String LIBRE_FSTR = "VLOOKUP(C%1$d; A%1$d:A%1$d; 1; 0)";
 
