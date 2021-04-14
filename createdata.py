@@ -8,7 +8,7 @@ if __name__ == "__main__":
         path=os.path.join("..", "experiments", "results", "64bit-excel", "experiment6", "r(same)cv-5trials-rand-1col-main", "dataset")
         , inst="SameCellVlookup"
         , seed=42
-        , xlsx=True
+        , xlsx=False
         , step=100000
         , rows=100
         , cols=1

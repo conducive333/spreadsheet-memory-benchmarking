@@ -59,7 +59,7 @@ public class SameCellVlookup extends BaseVlookup implements Creatable {
             if (r == rows - 1) {
                 vRow.createCell(1).setCellValue(vals.get(0));
             } else {
-                vRow.createCell(1).setCellValue(Double.NaN);
+                vRow.createCell(1).setCellValue("#N/A");
             }
             fRow.createCell(2).setCellValue(vals.get(rows - r - 1));
             vRow.createCell(2).setCellValue(vals.get(rows - r - 1));
@@ -92,7 +92,7 @@ public class SameCellVlookup extends BaseVlookup implements Creatable {
             if (r == rows - 1) {
                 vRow.getOrCreateCell(1).setFloatValue(vals.get(0));
             } else {
-                vRow.getOrCreateCell(1).setFloatValue(Double.NaN);
+                vRow.getOrCreateCell(1).setStringValue("#N/A");
             }
             fRow.getOrCreateCell(2).setFloatValue(vals.get(rows - r - 1));
             vRow.getOrCreateCell(2).setFloatValue(vals.get(rows - r - 1));
