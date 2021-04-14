@@ -56,7 +56,11 @@ public class SameCellVlookup extends BaseVlookup implements Creatable {
             fRow.createCell(0).setCellValue(vals.get(r));
             vRow.createCell(0).setCellValue(vals.get(r));
             fRow.createCell(1).setCellFormula(String.format(EXCEL_FSTR, r + 1));
-            vRow.createCell(1).setCellValue("#N/A");
+            if (r == rows - 1) {
+                vRow.createCell(1).setCellValue(vals.get(0));
+            } else {
+                vRow.createCell(1).setCellValue(Double.NaN);
+            }
             fRow.createCell(2).setCellValue(vals.get(rows - r - 1));
             vRow.createCell(2).setCellValue(vals.get(rows - r - 1));
         }
@@ -85,7 +89,11 @@ public class SameCellVlookup extends BaseVlookup implements Creatable {
             fRow.getOrCreateCell(0).setFloatValue(vals.get(r));
             vRow.getOrCreateCell(0).setFloatValue(vals.get(r));
             fRow.getOrCreateCell(1).setFormula(String.format(LIBRE_FSTR, r + 1));
-            vRow.getOrCreateCell(1).setStringValue("#N/A");
+            if (r == rows - 1) {
+                vRow.getOrCreateCell(1).setFloatValue(vals.get(0));
+            } else {
+                vRow.getOrCreateCell(1).setFloatValue(Double.NaN);
+            }
             fRow.getOrCreateCell(2).setFloatValue(vals.get(rows - r - 1));
             vRow.getOrCreateCell(2).setFloatValue(vals.get(rows - r - 1));
         }
