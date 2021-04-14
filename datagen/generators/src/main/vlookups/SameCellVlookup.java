@@ -26,7 +26,7 @@ public class SameCellVlookup extends BaseVlookup implements Creatable {
      * ? = a UNIQUE random value (or a placeholder value if no random 
      * seed is specified). Unlike the classes in the sums package, the
      * COLS parameter is ignored for this class. The values in column 
-     * C are in the reverse order as the ones in column A.
+     * C are the same as those in column A, but in reverse order.
      *
      */
 
