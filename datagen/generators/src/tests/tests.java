@@ -21,7 +21,7 @@ public class tests {
     /**
      * This is for generating random spreadsheet sizes.
      */
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
+    private static final Random RANDOM = new Random(42L);
 
     /** 
      * The number of rows and columns to generate for a 
