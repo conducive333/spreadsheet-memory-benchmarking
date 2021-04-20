@@ -22,21 +22,22 @@ public class Main {
     private static final int            COLS;
     private static final int            ITRS;
     private static final int            POOL;
-    public  static final int            UPPR;
+    private  static final int           UPPR;
 
+    // Be careful! ROWS, COLS, and UPPR should be assigned before INST.
     static {
         Properties pr = new Properties();
         try(FileInputStream in = new FileInputStream("config")) { pr.load(in); }
         catch (IOException e) { e.printStackTrace(); System.exit(1); }
         PATH = Path.of(pr.getProperty("PATH"));
-        INST = Main.resolveName(pr.getProperty("INST"));
-        SEED = Main.resolveSeed(pr.getProperty("SEED"));
-        UPPR = Main.resolveUppr(pr.getProperty("UPPR"));
         STEP = Integer.parseInt(pr.getProperty("STEP"));
         ROWS = Integer.parseInt(pr.getProperty("ROWS"));
         COLS = Integer.parseInt(pr.getProperty("COLS"));
         ITRS = Integer.parseInt(pr.getProperty("ITRS"));
         POOL = Integer.parseInt(pr.getProperty("POOL"));
+        SEED = Main.resolveSeed(pr.getProperty("SEED"));
+        UPPR = Main.resolveUppr(pr.getProperty("UPPR"));
+        INST = Main.resolveName(pr.getProperty("INST"));
         XLSX = Boolean.parseBoolean(pr.getProperty("XLSX"));
     }
 

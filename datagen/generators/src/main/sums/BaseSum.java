@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class BaseSum {
     
-    public static final double   FILL_VALUE  = 1.0;
+    public static final double FILL_VALUE = 1.0;
 
     public final int rows;
     public final int cols;

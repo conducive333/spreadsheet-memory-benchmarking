@@ -10,7 +10,7 @@ import os
 from . import definitions
 
 class ConfigArgs:
-    def __init__(self, path, inst, seed, xlsx, step, rows, cols, itrs, pool):
+    def __init__(self, path, inst, seed, xlsx, step, rows, cols, itrs, pool, uppr):
         self.path = path
         self.inst = inst
         self.seed = seed
@@ -20,6 +20,7 @@ class ConfigArgs:
         self.cols = cols
         self.itrs = itrs
         self.pool = pool
+        self.uppr = uppr
 
 def __create_process(child_conn, xlsx, inputs_path, output_path, experiment_arg, sofficepath):
     """
@@ -91,6 +92,7 @@ def create_datasets(config_args):
         f.write(f"COLS={config_args.cols}\n")
         f.write(f"ITRS={config_args.itrs}\n")
         f.write(f"POOL={config_args.pool}\n")
+        f.write(f"UPPR={config_args.uppr}\n")
     subprocess.check_call(["java", "-jar", definitions.JAR_NAME])
     os.remove(os.path.join(definitions.ROOT_DIR, 'config'))
     os.chdir(cwd)

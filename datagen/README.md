@@ -22,7 +22,7 @@
 
 ### Method 1 (Preferred):
 1. Download the `.jar` file associated with this project (should be on the "Releases" page).
-2. Fill in the desired script arguments in `createdata.py`.
+2. Fill in the desired script arguments in `createdata.py`. Descriptions of each parameter are shown in method 2 below.
 3. Run the script!
 
 ### Method 2:
@@ -36,7 +36,7 @@
     - `COLS`    : The number of columns to create.
     - `ITRS`    : The number of iterations to perform.
     - `POOL`    : The number of threads to use. If set to 1, then the main thread will be used (i.e. no multithreading).
-    - `UPPR`    : (OPTIONAL) An (exclusive) upper bound on the random values to use. Only applicable if `SEED` is specified. If `SEED` is specified and this is left empty, then its value defaults to `ROWS * COLS`.
+    - `UPPR`    : (OPTIONAL) An (exclusive) upper bound on the random values to use. Only applicable if you generate a SUM spreadsheet with a `SEED` specified. If `SEED` is specified and this is left empty, then its value defaults to `ROWS * COLS`.
 
 2. Run the script from `Main.java`.
 
@@ -49,7 +49,7 @@ XLSX=true
 STEP=1
 ROWS=100
 COLS=1
-ITER=1
+ITRS=1
 POOL=1
 UPPR=10
 ```

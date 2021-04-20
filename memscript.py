@@ -18,6 +18,7 @@ if __name__ == "__main__":
         , cols=1
         , itrs=1
         , pool=1
+        , uppr=10
     )
 
     # Create datasets, run experiments, save results
