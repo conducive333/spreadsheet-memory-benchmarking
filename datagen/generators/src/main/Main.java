@@ -22,6 +22,7 @@ public class Main {
     private static final int            COLS;
     private static final int            ITRS;
     private static final int            POOL;
+    public  static final int            UPPR;
 
     static {
         Properties pr = new Properties();
@@ -30,6 +31,7 @@ public class Main {
         PATH = Path.of(pr.getProperty("PATH"));
         INST = Main.resolveName(pr.getProperty("INST"));
         SEED = Main.resolveSeed(pr.getProperty("SEED"));
+        UPPR = Main.resolveUppr(pr.getProperty("UPPR"));
         STEP = Integer.parseInt(pr.getProperty("STEP"));
         ROWS = Integer.parseInt(pr.getProperty("ROWS"));
         COLS = Integer.parseInt(pr.getProperty("COLS"));
@@ -43,17 +45,29 @@ public class Main {
      * @return The spreadsheet creator corresponding to `s`.
      */
     private static Creatable resolveName (String s) {
-        if (s.equals("CompleteBipartiteSum"))               return new CompleteBipartiteSum();
-        if (s.equals("CompleteBipartiteSumWithConstant"))   return new CompleteBipartiteSumWithConstant();
-        if (s.equals("MixedRangeSum"))                      return new MixedRangeSum();
-        if (s.equals("NoEdgeSum"))                          return new NoEdgeSum();        
-        if (s.equals("OverlappingSum"))                     return new OverlappingSum();
-        if (s.equals("RunningSum"))                         return new RunningSum();
-        if (s.equals("SingleCellSum"))                      return new SingleCellSum();
-        if (s.equals("CompleteBipartiteVlookup"))           return new CompleteBipartiteVlookup();
-        if (s.equals("SameCellVlookup"))                    return new SameCellVlookup();
-        if (s.equals("SingleCellVlookup"))                  return new SingleCellVlookup();
+        if (s.equals("CompleteBipartiteSum"))               return new CompleteBipartiteSum             (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("CompleteBipartiteSumWithConstant"))   return new CompleteBipartiteSumWithConstant (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("MixedRangeSum"))                      return new MixedRangeSum                    (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("NoEdgeSum"))                          return new NoEdgeSum                        (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("OverlappingSum"))                     return new OverlappingSum                   (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("RunningSum"))                         return new RunningSum                       (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("SingleCellSum"))                      return new SingleCellSum                    (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("CompleteBipartiteVlookup"))           return new CompleteBipartiteVlookup         (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("SameCellVlookup"))                    return new SameCellVlookup                  (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("SingleCellVlookup"))                  return new SingleCellVlookup                (Main.ROWS, Main.COLS, Main.UPPR);
         return null;
+    }
+
+    /**
+     * @param s
+     * @return An OptionalLong containing `s` interpreted as an 
+     * int. If `s` is empty, returns an empty OptionalLong.
+     */
+    private static int resolveUppr (String s) {
+        if (s.length() == 0) {
+            return Main.ROWS * Main.COLS;
+        }
+        return Integer.parseInt(s);
     }
 
     /**

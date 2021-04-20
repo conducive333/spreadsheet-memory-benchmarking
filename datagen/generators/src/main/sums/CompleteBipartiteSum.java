@@ -35,8 +35,12 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
 
     private static final String CREATE_STR = "SUM(A1:%s%d)";
 
+    public CompleteBipartiteSum (int rows, int cols, int uppr) {
+        super(rows, cols, uppr);
+    }
+
     @Override
-    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
+    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -50,9 +54,9 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
+    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, long seed) {
         Deque<Double> values = new ArrayDeque<>();
-        double total = super.randomlyFillDeque(values, rows * cols, new Random(seed), rows * cols);
+        double total = super.randomlyFillDeque(values, rows * cols, new Random(seed));
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -67,7 +71,7 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createCalcSheet(Table fSheet, Table vSheet, int rows, int cols) throws IOException {
+    public void createCalcSheet(Table fSheet, Table vSheet) throws IOException {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
@@ -81,9 +85,9 @@ public class CompleteBipartiteSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, long seed) throws IOException {
         Deque<Double> values = new ArrayDeque<>();
-        double total = super.randomlyFillDeque(values, rows * cols, new Random(seed), rows * cols);
+        double total = super.randomlyFillDeque(values, rows * cols, new Random(seed));
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);

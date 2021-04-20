@@ -7,7 +7,23 @@ import java.util.List;
 
 public abstract class BaseVlookup {
 
-    protected static final double FILL_VALUE = 1.0;
+    public static final double FILL_VALUE = 1.0;
+    
+    public final int rows;
+    public final int cols;
+    public final int uppr;
+
+    /**
+     * 
+     * @param rows
+     * @param cols
+     * @param uppr
+     */
+    public BaseVlookup (int rows, int cols, int uppr) {
+        this.rows = rows;
+        this.cols = cols;
+        this.uppr = uppr;
+    }
 
     /**
      * Creates a list from [0, `size`) and shuffles its ordering.

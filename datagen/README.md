@@ -27,15 +27,16 @@
 
 ### Method 2:
 1. Create a file named `config` (no extension) in the root directory of the entire project (i.e. the directory where requirements.txt is). The config file should have the following fields:
-    - `INST`  : The name of the class to use.
-    - `PATH`  : Specifies where to create the datasets.
-    - `SEED`  : The seed to use when generating random values. If left empty, then sheets will be filled with the same placeholder value (currently set to 1).
-    - `XLSX`  : If true, creates `.xlsx` spreadsheets. Otherwise, creates `.ods` spreadsheets.
-    - `STEP`  : The number of rows to increment by on the next iteration.
-    - `ROWS`  : The starting number of rows.
-    - `COLS`  : The number of columns to create.
-    - `ITRS`  : The number of iterations to perform.
-    - `POOL`  : The number of threads to use. If set to 1, then the main thread will be used (i.e. no multithreading).
+    - `INST`    : The name of the class to use.
+    - `PATH`    : Specifies where to create the datasets.
+    - `SEED`    : The seed to use when generating random values. If left empty, then sheets will be filled with the same placeholder value (currently set to 1).
+    - `XLSX`    : If true, creates `.xlsx` spreadsheets. Otherwise, creates `.ods` spreadsheets.
+    - `STEP`    : The number of rows to increment by on the next iteration.
+    - `ROWS`    : The starting number of rows.
+    - `COLS`    : The number of columns to create.
+    - `ITRS`    : The number of iterations to perform.
+    - `POOL`    : The number of threads to use. If set to 1, then the main thread will be used (i.e. no multithreading).
+    - `UPPR`    : (OPTIONAL) An (exclusive) upper bound on the random values to use. Only applicable if `SEED` is specified. If `SEED` is specified and this is left empty, then its value defaults to `ROWS * COLS`.
 
 2. Run the script from `Main.java`.
 
@@ -50,6 +51,7 @@ ROWS=100
 COLS=1
 ITER=1
 POOL=1
+UPPR=10
 ```
 
 ## Notes

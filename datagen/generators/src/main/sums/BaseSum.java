@@ -6,7 +6,23 @@ import java.util.List;
 
 public abstract class BaseSum {
     
-    protected static final double FILL_VALUE = 1.0;
+    public static final double   FILL_VALUE  = 1.0;
+
+    public final int rows;
+    public final int cols;
+    public final int uppr;
+
+    /**
+     * 
+     * @param rows
+     * @param cols
+     * @param uppr
+     */
+    public BaseSum (int rows, int cols, int uppr) {
+        this.rows = rows;
+        this.cols = cols;
+        this.uppr = uppr;
+    }
 
     /**
      * Fills the input deque with `size` random
@@ -15,13 +31,12 @@ public abstract class BaseSum {
      * @param dequeToFill
      * @param size
      * @param rand
-     * @param bound
      * @return The sum of `dequeToFill`.
      */
-    protected double randomlyFillDeque (Deque<Double> dequeToFill, int size, Random rand, int bound) {
+    protected double randomlyFillDeque (Deque<Double> dequeToFill, int size, Random rand) {
         double total = 0.0;
         for (int i = 0; i < size; i++) {
-            int num = rand.nextInt(bound);
+            int num = rand.nextInt(this.uppr);
             dequeToFill.add((double) num);
             total += num;
         }
@@ -35,13 +50,12 @@ public abstract class BaseSum {
      * @param listToFill
      * @param size
      * @param rand
-     * @param bound
      * @return The sum of `dequeToFill`.
      */
-    protected double randomlyFillList (List<Double> listToFill, int size, Random rand, int bound) {
+    protected double randomlyFillList (List<Double> listToFill, int size, Random rand) {
         double total = 0.0;
         for (int i = 0; i < size; i++) {
-            int num = rand.nextInt(bound);
+            int num = rand.nextInt(this.uppr);
             listToFill.add((double) num);
             total += num;
         }

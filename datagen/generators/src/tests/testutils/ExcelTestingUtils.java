@@ -54,17 +54,18 @@ public class ExcelTestingUtils extends TestingUtils {
      * @param cols
      * @param expectedCols
      * @param seed
+     * @param uppr
      * @param getExpectedFormula
      */
-    public static void integrationTest (Creatable creatable, int rows, int expectedRows, int cols, int expectedCols, OptionalLong seed, BiFunction<Integer, Integer, String> getExpectedFormula) {
+    public static void integrationTest (Creatable creatable, int rows, int expectedRows, int cols, int expectedCols, OptionalLong seed, int uppr, BiFunction<Integer, Integer, String> getExpectedFormula) {
         File[] files = createExcelFiles(creatable, rows, cols, seed);
         assertTrue(allFilesExist(files));
-        checkExcelFVWorkbook(files[1], rows, expectedRows, cols, expectedCols, seed, getExpectedFormula);
+        checkExcelFVWorkbook(files[1], rows, expectedRows, cols, expectedCols, seed, uppr, getExpectedFormula);
         checkExcelVOWorkbook(files[0], files[1], cols);
         TestingUtils.deleteFiles();
     }
 
-    private static void checkExcelFVWorkbook (File formulaValueFile, int rows, int expectedRows, int cols, int expectedCols, OptionalLong seed, BiFunction<Integer, Integer, String> getExpectedFormula) {
+    private static void checkExcelFVWorkbook (File formulaValueFile, int rows, int expectedRows, int cols, int expectedCols, OptionalLong seed, int uppr, BiFunction<Integer, Integer, String> getExpectedFormula) {
         try (XSSFWorkbook fWorkbook = new XSSFWorkbook(formulaValueFile)) {
             assertEquals(1, fWorkbook.getNumberOfSheets());
             int actualRowCount = 0;
@@ -73,7 +74,7 @@ public class ExcelTestingUtils extends TestingUtils {
                 for (int c = 0; c < cols; c++) {
                     assertCellIsNotNull(row, c);
                     assertCellIsNotNull(row, c + cols);
-                    checkExcelNumericCell(row.getCell(c), seed, 0, rows * cols);
+                    checkExcelNumericCell(row.getCell(c), seed, 0, uppr);
                     checkExcelFormulaCell(row.getCell(c + cols), getExpectedFormula.apply(row.getRowNum(), c));
                 }
                 actualRowCount++;

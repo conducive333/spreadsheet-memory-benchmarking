@@ -33,8 +33,12 @@ public class SingleCellSum extends BaseSum implements Creatable {
 
     private static final String CREATE_STR = "SUM(%s%d:%s%d)";
 
+    public SingleCellSum (int rows, int cols, int uppr) {
+        super(rows, cols, uppr);
+    }
+
     @Override
-    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
+    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -49,13 +53,13 @@ public class SingleCellSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
+    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, long seed) {
         Random rand = new Random(seed);
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
             for (int c = 0; c < cols; c++) {
-                double num = rand.nextInt(rows * cols);
+                double num = rand.nextInt(uppr);
                 String col = CellReference.convertNumToColString(c);
                 fRow.createCell(c).setCellValue(num);
                 vRow.createCell(c).setCellValue(num);
@@ -66,7 +70,7 @@ public class SingleCellSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createCalcSheet(Table fSheet, Table vSheet, int rows, int cols) throws IOException {
+    public void createCalcSheet(Table fSheet, Table vSheet) throws IOException {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
@@ -81,13 +85,13 @@ public class SingleCellSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, long seed) throws IOException {
         Random rand = new Random(seed);
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
             for (int c = 0; c < cols; c++) {
-                double num = rand.nextInt(rows * cols);
+                double num = rand.nextInt(uppr);
                 String col = CellReference.convertNumToColString(c);
                 fRow.getOrCreateCell(c).setFloatValue(num);
                 vRow.getOrCreateCell(c).setFloatValue(num);

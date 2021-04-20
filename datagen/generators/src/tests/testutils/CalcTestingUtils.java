@@ -61,9 +61,10 @@ public class CalcTestingUtils extends TestingUtils {
      * @param cols
      * @param expectedCols
      * @param seed
+     * @param uppr
      * @param getExpectedFormula
      */
-    public static void integrationTest (Creatable creatable, int rows, int expectedRows, int cols, int expectedCols, OptionalLong seed, BiFunction<Integer, Integer, String> getExpectedFormula) {
+    public static void integrationTest (Creatable creatable, int rows, int expectedRows, int cols, int expectedCols, OptionalLong seed, int uppr, BiFunction<Integer, Integer, String> getExpectedFormula) {
         try {
 
             // Set up testing mocks
@@ -87,9 +88,9 @@ public class CalcTestingUtils extends TestingUtils {
             
             // Call the real method
             if (seed.isPresent()) {
-                createMock.createRandomCalcSheet(fSheetMock, vSheetMock, rows, cols, seed.getAsLong());
+                createMock.createRandomCalcSheet(fSheetMock, vSheetMock, seed.getAsLong());
             } else {
-                createMock.createCalcSheet(fSheetMock, vSheetMock, rows, cols);
+                createMock.createCalcSheet(fSheetMock, vSheetMock);
             }
 
             // Check function calls and parameters

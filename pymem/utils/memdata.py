@@ -22,10 +22,10 @@ class MemDataCollector:
     ]
 
     def __init__(self):
-        self.count      = 0
-        self.tot_mem    = numpy.array([ 0                               ] * len(MemDataCollector.TITLES), dtype=numpy.ulonglong)
-        self.max_mem    = numpy.array([ numpy.iinfo(numpy.longlong).min ] * len(MemDataCollector.TITLES), dtype=numpy.longlong)
-        self.min_mem    = numpy.array([ numpy.iinfo(numpy.longlong).max ] * len(MemDataCollector.TITLES), dtype=numpy.longlong)
+        self.counter = 0
+        self.tot_mem = numpy.array([ 0                               ] * len(MemDataCollector.TITLES), dtype=numpy.ulonglong)
+        self.max_mem = numpy.array([ numpy.iinfo(numpy.longlong).min ] * len(MemDataCollector.TITLES), dtype=numpy.longlong)
+        self.min_mem = numpy.array([ numpy.iinfo(numpy.longlong).max ] * len(MemDataCollector.TITLES), dtype=numpy.longlong)
 
     def measure(self, pid):
         
@@ -40,15 +40,15 @@ class MemDataCollector:
         self.min_mem = numpy.minimum(self.min_mem, meminfo)
 
         # This is for averaging the number of measurements
-        self.count += 1
+        self.counter += 1
 
     def report(self, smooth=True, prefix="", suffix="", normalizer=1):
-        if smooth and self.count >= 3:
-            aggregated = ((self.tot_mem - self.min_mem - self.max_mem) / (self.count - 2)) / normalizer
+        if smooth and self.counter >= 3:
+            aggregated = ((self.tot_mem - self.min_mem - self.max_mem) / (self.counter - 2)) / normalizer
             return { prefix + t + suffix : v for t, v in zip(MemDataCollector.TITLES, aggregated) }
         else:
-            if self.count != 0:
-                aggregated = (self.tot_mem / self.count) / normalizer
+            if self.counter != 0:
+                aggregated = (self.tot_mem / self.counter) / normalizer
                 return { prefix + t + suffix : v for t, v in zip(MemDataCollector.TITLES, aggregated) }
             else:
                 return { prefix + t + suffix : None for t in MemDataCollector.TITLES }

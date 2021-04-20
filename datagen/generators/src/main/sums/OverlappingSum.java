@@ -30,14 +30,20 @@ public class OverlappingSum extends BaseSum implements Creatable {
      * controls the number of columns with values AND
      * the number of columns with formulae. For example,
      * if COLS = 2, then there will be 2 columns of values
-     * and 2 columns of formulae.
+     * and 2 columns of formulae. The window size adjusts
+     * the number of cells in the range. In the example 
+     * above, WINDOW_SZE = 2.
      */
 
     private static final String CREATE_STR = "SUM(%s%d:%s%d)";
-    private static final int    WINDOW_SZE = 2;
+    public  static final int    WINDOW_SZE = 500;
+
+    public OverlappingSum (int rows, int cols, int uppr) {
+        super(rows, cols, uppr);
+    }
 
     @Override
-    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
+    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -58,9 +64,9 @@ public class OverlappingSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
+    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, long seed) {
         List<Double> values = new ArrayList<>();
-        super.randomlyFillList(values, rows * cols, new Random(seed), rows * cols);
+        super.randomlyFillList(values, rows * cols, new Random(seed));
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -87,7 +93,7 @@ public class OverlappingSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createCalcSheet(Table fSheet, Table vSheet, int rows, int cols) throws IOException {
+    public void createCalcSheet(Table fSheet, Table vSheet) throws IOException {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
@@ -108,9 +114,9 @@ public class OverlappingSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, long seed) throws IOException {
         List<Double> values = new ArrayList<>();
-        super.randomlyFillList(values, rows * cols, new Random(seed), rows * cols);
+        super.randomlyFillList(values, rows * cols, new Random(seed));
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
