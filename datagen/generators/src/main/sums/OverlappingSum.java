@@ -58,7 +58,7 @@ public class OverlappingSum extends BaseSum implements Creatable {
                         , r + WINDOW_SZE
                     )
                 );
-                vRow.createCell(c + cols).setCellValue(r == rows - 1 ? FILL_VALUE : WINDOW_SZE * FILL_VALUE);
+                vRow.createCell(c + cols).setCellValue(Math.min(WINDOW_SZE, rows - r) * FILL_VALUE);
             }
         }
     }
@@ -108,7 +108,7 @@ public class OverlappingSum extends BaseSum implements Creatable {
                         , r + WINDOW_SZE
                     )
                 );
-                vRow.getOrCreateCell(c + cols).setFloatValue(r == rows - 1 ? FILL_VALUE : WINDOW_SZE * FILL_VALUE);
+                vRow.getOrCreateCell(c + cols).setFloatValue(Math.min(WINDOW_SZE, rows - r) * FILL_VALUE);
             }
         }
     }
