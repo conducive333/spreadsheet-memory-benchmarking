@@ -88,9 +88,9 @@ public class CalcTestingUtils extends TestingUtils {
             
             // Call the real method
             if (seed.isPresent()) {
-                createMock.createRandomCalcSheet(fSheetMock, vSheetMock, seed.getAsLong());
+                createMock.createRandomCalcSheet(fSheetMock, vSheetMock, rows, cols, seed.getAsLong());
             } else {
-                createMock.createCalcSheet(fSheetMock, vSheetMock);
+                createMock.createCalcSheet(fSheetMock, vSheetMock, rows, cols);
             }
 
             // Check function calls and parameters

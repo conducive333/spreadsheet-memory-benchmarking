@@ -31,9 +31,9 @@ public abstract class Creator {
                 SXSSFSheet fSheet = fWorkbook.createSheet("Sheet1");
                 SXSSFSheet vSheet = vWorkbook.createSheet("Sheet1");
                 if (seed.isPresent()) {
-                    createable.createRandomExcelSheet(fSheet, vSheet, seed.getAsLong());
+                    createable.createRandomExcelSheet(fSheet, vSheet, rows, cols, seed.getAsLong());
                 } else {
-                    createable.createExcelSheet(fSheet, vSheet);
+                    createable.createExcelSheet(fSheet, vSheet, rows, cols);
                 }
                 Creator.saveWorkbook(fWorkbook, fName);
                 Creator.saveWorkbook(vWorkbook, vName);
@@ -55,9 +55,9 @@ public abstract class Creator {
                 Table fSheet = fWriter.document().addTable("Sheet1");
                 Table vSheet = vWriter.document().addTable("Sheet1");
                 if (seed.isPresent()) {
-                    createable.createRandomCalcSheet(fSheet, vSheet, seed.getAsLong());
+                    createable.createRandomCalcSheet(fSheet, vSheet, rows, cols, seed.getAsLong());
                 } else {
-                    createable.createCalcSheet(fSheet, vSheet);
+                    createable.createCalcSheet(fSheet, vSheet, rows, cols);
                 }
                 fWriter.saveAs(fName);
                 vWriter.saveAs(vName);

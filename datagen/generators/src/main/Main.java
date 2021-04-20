@@ -46,16 +46,16 @@ public class Main {
      * @return The spreadsheet creator corresponding to `s`.
      */
     private static Creatable resolveName (String s) {
-        if (s.equals("CompleteBipartiteSum"))               return new CompleteBipartiteSum             (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("CompleteBipartiteSumWithConstant"))   return new CompleteBipartiteSumWithConstant (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("MixedRangeSum"))                      return new MixedRangeSum                    (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("NoEdgeSum"))                          return new NoEdgeSum                        (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("OverlappingSum"))                     return new OverlappingSum                   (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("RunningSum"))                         return new RunningSum                       (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("SingleCellSum"))                      return new SingleCellSum                    (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("CompleteBipartiteVlookup"))           return new CompleteBipartiteVlookup         (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("SameCellVlookup"))                    return new SameCellVlookup                  (Main.ROWS, Main.COLS, Main.UPPR);
-        if (s.equals("SingleCellVlookup"))                  return new SingleCellVlookup                (Main.ROWS, Main.COLS, Main.UPPR);
+        if (s.equals("CompleteBipartiteSum"))               return new CompleteBipartiteSum             (Main.UPPR);
+        if (s.equals("CompleteBipartiteSumWithConstant"))   return new CompleteBipartiteSumWithConstant (Main.UPPR);
+        if (s.equals("MixedRangeSum"))                      return new MixedRangeSum                    (Main.UPPR);
+        if (s.equals("NoEdgeSum"))                          return new NoEdgeSum                        (Main.UPPR);
+        if (s.equals("OverlappingSum"))                     return new OverlappingSum                   (Main.UPPR);
+        if (s.equals("RunningSum"))                         return new RunningSum                       (Main.UPPR);
+        if (s.equals("SingleCellSum"))                      return new SingleCellSum                    (Main.UPPR);
+        if (s.equals("CompleteBipartiteVlookup"))           return new CompleteBipartiteVlookup         (Main.UPPR);
+        if (s.equals("SameCellVlookup"))                    return new SameCellVlookup                  (Main.UPPR);
+        if (s.equals("SingleCellVlookup"))                  return new SingleCellVlookup                (Main.UPPR);
         return null;
     }
 

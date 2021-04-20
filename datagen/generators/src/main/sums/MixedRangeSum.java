@@ -35,12 +35,12 @@ public class MixedRangeSum extends BaseSum implements Creatable {
 
     private static final String CREATE_STR = "SUM(%s%d:%s%d) + SUM(A1:%s%d)";
 
-    public MixedRangeSum (int rows, int cols, int uppr) {
-        super(rows, cols, uppr);
+    public MixedRangeSum (int uppr) {
+        super(uppr);
     }
 
     @Override
-    public void createExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet) {
+    public void createExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -65,7 +65,7 @@ public class MixedRangeSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, long seed) {
+    public void createRandomExcelSheet(SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
         Deque<Double> values = new ArrayDeque<>();
         double total = super.randomlyFillDeque(values, rows * cols, new Random(seed));
         for (int r = 0; r < rows; r++) {
@@ -93,7 +93,7 @@ public class MixedRangeSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createCalcSheet(Table fSheet, Table vSheet) throws IOException {
+    public void createCalcSheet(Table fSheet, Table vSheet, int rows, int cols) throws IOException {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
@@ -118,7 +118,7 @@ public class MixedRangeSum extends BaseSum implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, long seed) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
         Deque<Double> values = new ArrayDeque<>();
         double total = super.randomlyFillDeque(values, rows * cols, new Random(seed));
         for (int r = 0; r < rows; r++) {

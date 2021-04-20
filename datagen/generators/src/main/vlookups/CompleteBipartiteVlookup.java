@@ -32,12 +32,12 @@ public class CompleteBipartiteVlookup extends BaseVlookup implements Creatable {
     private static final String EXCEL_FSTR = "VLOOKUP(C%d, A1:A%d, 1, FALSE)";
     private static final String LIBRE_FSTR = "VLOOKUP(C%d; A1:A%d; 1; 0)";
 
-    public CompleteBipartiteVlookup (int rows, int cols, int uppr) {
-        super(rows, cols, uppr);
+    public CompleteBipartiteVlookup (int uppr) {
+        super(uppr);
     }
 
     @Override
-    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet) {
+    public void createExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols) {
         for (int r = 0; r < rows; r++) {
             SXSSFRow fRow = fSheet.createRow(r);
             SXSSFRow vRow = vSheet.createRow(r);
@@ -51,7 +51,7 @@ public class CompleteBipartiteVlookup extends BaseVlookup implements Creatable {
     }
 
     @Override
-    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, long seed) {
+    public void createRandomExcelSheet (SXSSFSheet fSheet, SXSSFSheet vSheet, int rows, int cols, long seed) {
         List<Double> vals = super.getShuffledConsecutiveNumbers(new Random(seed + 0), rows);
         List<Double> look = super.getShuffledConsecutiveNumbers(new Random(seed + 1), rows);
         for (int r = 0; r < rows; r++) {
@@ -67,7 +67,7 @@ public class CompleteBipartiteVlookup extends BaseVlookup implements Creatable {
     }
 
     @Override
-    public void createCalcSheet(Table fSheet, Table vSheet) throws IOException {
+    public void createCalcSheet(Table fSheet, Table vSheet, int rows, int cols) throws IOException {
         for (int r = 0; r < rows; r++) {
             TableRowImpl fRow = fSheet.getRow(r);
             TableRowImpl vRow = vSheet.getRow(r);
@@ -81,7 +81,7 @@ public class CompleteBipartiteVlookup extends BaseVlookup implements Creatable {
     }
 
     @Override
-    public void createRandomCalcSheet(Table fSheet, Table vSheet, long seed) throws IOException {
+    public void createRandomCalcSheet(Table fSheet, Table vSheet, int rows, int cols, long seed) throws IOException {
         List<Double> vals = super.getShuffledConsecutiveNumbers(new Random(seed + 0), rows);
         List<Double> look = super.getShuffledConsecutiveNumbers(new Random(seed + 1), rows);
         for (int r = 0; r < rows; r++) {

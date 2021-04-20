@@ -21,7 +21,7 @@ public class tests {
     /**
      * This is for generating random spreadsheet sizes.
      */
-    private static final Random RANDOM = new Random(42L);
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     /** 
      * The number of rows and columns to generate for a 
@@ -84,16 +84,16 @@ public class tests {
     public void testCreateCalcFiles () {
 
         Creatable[] creatables = new Creatable[] {
-            new CompleteBipartiteSum                (rows, cols, UPPR),
-            new CompleteBipartiteSumWithConstant    (rows, cols, UPPR),
-            new MixedRangeSum                       (rows, cols, UPPR),
-            new NoEdgeSum                           (rows, cols, UPPR),
-            new OverlappingSum                      (rows, cols, UPPR),
-            new RunningSum                          (rows, cols, UPPR),
-            new SingleCellSum                       (rows, cols, UPPR),
-            new CompleteBipartiteVlookup            (rows, cols, UPPR),
-            new SameCellVlookup                     (rows, cols, UPPR),
-            new SingleCellVlookup                   (rows, cols, UPPR)
+            new CompleteBipartiteSum                (UPPR),
+            new CompleteBipartiteSumWithConstant    (UPPR),
+            new MixedRangeSum                       (UPPR),
+            new NoEdgeSum                           (UPPR),
+            new OverlappingSum                      (UPPR),
+            new RunningSum                          (UPPR),
+            new SingleCellSum                       (UPPR),
+            new CompleteBipartiteVlookup            (UPPR),
+            new SameCellVlookup                     (UPPR),
+            new SingleCellVlookup                   (UPPR)
         };
 
         /** Check if RNG path works */

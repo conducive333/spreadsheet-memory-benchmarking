@@ -94,46 +94,46 @@ public class TestingUtils {
      */
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getCompleteBipartiteSum(int rows, int cols, int uppr) {
-        return new AbstractMap.SimpleEntry<>(new CompleteBipartiteSum(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), rows));
+        return new AbstractMap.SimpleEntry<>(new CompleteBipartiteSum(uppr), (currRowIdx, currColIdx) -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), rows));
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getCompleteBipartiteSumWithConstant(int rows, int cols, int uppr) {
-        return new AbstractMap.SimpleEntry<>(new CompleteBipartiteSumWithConstant(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("SUM(A1:%s%d) + %d", CellReference.convertNumToColString(cols - 1), rows, currRowIdx + 1));
+        return new AbstractMap.SimpleEntry<>(new CompleteBipartiteSumWithConstant(uppr), (currRowIdx, currColIdx) -> String.format("SUM(A1:%s%d) + %d", CellReference.convertNumToColString(cols - 1), rows, currRowIdx + 1));
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getOverlappingSum(int rows, int cols, int uppr, int windowSize) {
-        return new AbstractMap.SimpleEntry<>(new OverlappingSum(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("SUM(%s%d:%s%d)", CellReference.convertNumToColString(currColIdx), currRowIdx + 1, CellReference.convertNumToColString(currColIdx), currRowIdx + windowSize));
+        return new AbstractMap.SimpleEntry<>(new OverlappingSum(uppr), (currRowIdx, currColIdx) -> String.format("SUM(%s%d:%s%d)", CellReference.convertNumToColString(currColIdx), currRowIdx + 1, CellReference.convertNumToColString(currColIdx), currRowIdx + windowSize));
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getRunningSum(int rows, int cols, int uppr) {
-        return new AbstractMap.SimpleEntry<>(new RunningSum(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), currRowIdx + 1));
+        return new AbstractMap.SimpleEntry<>(new RunningSum(uppr), (currRowIdx, currColIdx) -> String.format("SUM(A1:%s%d)", CellReference.convertNumToColString(cols - 1), currRowIdx + 1));
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getCompleteBipartiteVlookup(int rows, int cols, int uppr, boolean calc) {
         if (calc) {
-            return new AbstractMap.SimpleEntry<>(new CompleteBipartiteVlookup(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d; A1:A%d; 1; 0)", currRowIdx + 1, rows));
+            return new AbstractMap.SimpleEntry<>(new CompleteBipartiteVlookup(uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d; A1:A%d; 1; 0)", currRowIdx + 1, rows));
         } else {
-            return new AbstractMap.SimpleEntry<>(new CompleteBipartiteVlookup(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d, A1:A%d, 1, FALSE)", currRowIdx + 1, rows));
+            return new AbstractMap.SimpleEntry<>(new CompleteBipartiteVlookup(uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%d, A1:A%d, 1, FALSE)", currRowIdx + 1, rows));
         }
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getSingleCellVlookup(int rows, int cols, int uppr, boolean calc) {
         if (calc) {
-            return new AbstractMap.SimpleEntry<>(new SingleCellVlookup(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%1$d; A%1$d:A%1$d; 1; 0)", currRowIdx + 1));
+            return new AbstractMap.SimpleEntry<>(new SingleCellVlookup(uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%1$d; A%1$d:A%1$d; 1; 0)", currRowIdx + 1));
         } else {
-            return new AbstractMap.SimpleEntry<>(new SingleCellVlookup(rows, cols, uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%1$d, A%1$d:A%1$d, 1, FALSE)", currRowIdx + 1));
+            return new AbstractMap.SimpleEntry<>(new SingleCellVlookup(uppr), (currRowIdx, currColIdx) -> String.format("VLOOKUP(C%1$d, A%1$d:A%1$d, 1, FALSE)", currRowIdx + 1));
         }
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getSingleCellSum(int rows, int cols, int uppr) {
-        return new AbstractMap.SimpleEntry<>(new SingleCellSum(rows, cols, uppr), (currRowIdx, currColIdx) -> {
+        return new AbstractMap.SimpleEntry<>(new SingleCellSum(uppr), (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             return String.format("SUM(%s%d:%s%d)", col, currRowIdx + 1, col, currRowIdx + 1);
         });
     }
 
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getMixedRangeSum(int rows, int cols, int uppr) {
-        return new AbstractMap.SimpleEntry<>(new MixedRangeSum(rows, cols, uppr), (currRowIdx, currColIdx) -> {
+        return new AbstractMap.SimpleEntry<>(new MixedRangeSum(uppr), (currRowIdx, currColIdx) -> {
             String col = CellReference.convertNumToColString(currColIdx);
             int row = currRowIdx + 1;
             return String.format("SUM(%s%d:%s%d) + SUM(A1:%s%d)", col, row, col, row
@@ -146,7 +146,7 @@ public class TestingUtils {
     public static AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> getNoEdgeSum(int rows, int cols, int uppr, long seed) {
         Random[] randRef = { null };
         int[] numRows = { 0 };
-        return new AbstractMap.SimpleEntry<>(new NoEdgeSum(rows, cols, uppr), (currRowIdx, currColIdx) -> {
+        return new AbstractMap.SimpleEntry<>(new NoEdgeSum(uppr), (currRowIdx, currColIdx) -> {
             
             // This will be true once we perform one integration test.
             // Integration tests alternate between non-random and random
