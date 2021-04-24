@@ -3,19 +3,17 @@ import os
 
 if __name__ == "__main__":
 
-    # CBS, MRS, OVS (window size set to 500), CONST_SUM
-
     # See datagen's README for explanations of each field
     CONFIG_ARGS = pymem.utils.pipeline.ConfigArgs(
-        path=os.path.join("..", "experiments", "results", "experiment-09", "64bit-excel", "rcbs-5trials-rand-1col-main", "dataset")
-        , inst="OverlappingSum"
+        path=os.path.join("TEST")
+        , inst="NoEdgeSum"
         , seed=42
-        , xlsx=True
-        , step=10000
-        , rows=0
+        , xlsx=False
+        , step=100000
+        , rows=100000
         , cols=1
         , itrs=10
-        , pool=1
+        , pool=5
         , uppr=100
     )
 
