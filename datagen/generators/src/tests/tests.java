@@ -83,17 +83,23 @@ public class tests {
     @Test
     public void testCreateCalcFiles () {
 
+        sums.specialsums.BaseSpecialSum.setMaxRows(EXCLUSIVE_UPPER_BOUND * 2);
+
         Creatable[] creatables = new Creatable[] {
-            new CompleteBipartiteSum                (UPPR),
-            new CompleteBipartiteSumWithConstant    (UPPR),
-            new MixedRangeSum                       (UPPR),
-            new NoEdgeSum                           (UPPR),
-            new OverlappingSum                      (UPPR),
-            new RunningSum                          (UPPR),
-            new SingleCellSum                       (UPPR),
-            new CompleteBipartiteVlookup            (UPPR),
-            new SameCellVlookup                     (UPPR),
-            new SingleCellVlookup                   (UPPR)
+            new CompleteBipartiteSum                    (UPPR),
+            new CompleteBipartiteSumWithConstant        (UPPR),
+            new MixedRangeSum                           (UPPR),
+            new NoEdgeSum                               (UPPR),
+            new OverlappingSum                          (UPPR),
+            new RunningSum                              (UPPR),
+            new SingleCellSum                           (UPPR),
+            new CompleteBipartiteVlookup                (UPPR),
+            new SameCellVlookup                         (UPPR),
+            new SingleCellVlookup                       (UPPR),
+            new sums.specialsums.CompleteBipartiteSum   (UPPR),
+            new sums.specialsums.MixedRangeSum          (UPPR),
+            new sums.specialsums.NoEdgeSum              (UPPR),
+            new sums.specialsums.OverlappingSum         (UPPR)
         };
 
         /** Check if RNG path works */
@@ -113,29 +119,32 @@ public class tests {
 
     @Test
     public void testCompleteBipartiteSum() {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         pair = TestingUtils.getCompleteBipartiteSum(0, 0, UPPR);
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, pair.getValue());
+        this.runEmptyIntegrationTests(pair.getKey(), seed, pair.getValue());
         pair = TestingUtils.getCompleteBipartiteSum(rows, cols, UPPR);
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, 42L, pair.getValue());
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, seed, pair.getValue());
     }
 
     @Test
     public void testCompleteBipartiteSumWithConstant() {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         pair = TestingUtils.getCompleteBipartiteSumWithConstant(0, 0, UPPR);
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, pair.getValue());
+        this.runEmptyIntegrationTests(pair.getKey(), seed, pair.getValue());
         pair = TestingUtils.getCompleteBipartiteSumWithConstant(rows, cols, UPPR);
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, 42L, pair.getValue());
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, seed, pair.getValue());
     }
 
     @Test
     public void testMixedRangeSum () {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         pair = TestingUtils.getMixedRangeSum(0, 0, UPPR);
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, pair.getValue());
+        this.runEmptyIntegrationTests(pair.getKey(), seed, pair.getValue());
         pair = TestingUtils.getMixedRangeSum(rows, cols, UPPR);
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, 42L, pair.getValue());
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, seed, pair.getValue());
     }
 
     @Test
@@ -150,33 +159,37 @@ public class tests {
 
     @Test
     public void testOverlappingSum () {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         pair = TestingUtils.getOverlappingSum(0, 0, UPPR, OverlappingSum.WINDOW_SZE);
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, pair.getValue());
+        this.runEmptyIntegrationTests(pair.getKey(), seed, pair.getValue());
         pair = TestingUtils.getOverlappingSum(rows, cols, UPPR, OverlappingSum.WINDOW_SZE);
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, 42L, pair.getValue());
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, seed, pair.getValue());
     }
 
     @Test
     public void testRunningSum () {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         pair = TestingUtils.getRunningSum(0, 0, UPPR);
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, pair.getValue());
+        this.runEmptyIntegrationTests(pair.getKey(), seed, pair.getValue());
         pair = TestingUtils.getRunningSum(rows, cols, UPPR);
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, 42L, pair.getValue());
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, seed, pair.getValue());
     }
 
     @Test
     public void testSingleCellSum () {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         pair = TestingUtils.getSingleCellSum(0, 0, UPPR);
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, pair.getValue());
+        this.runEmptyIntegrationTests(pair.getKey(), seed, pair.getValue());
         pair = TestingUtils.getSingleCellSum(rows, cols, UPPR);
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, 42L, pair.getValue());
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, cols, cols * 2, seed, pair.getValue());
     }
 
     @Test
     public void testCompleteBipartiteVlookup () {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         BiFunction<Integer, Integer, String> getExpectedExcelFormula;
         BiFunction<Integer, Integer, String> getExpectedLibreFormula;
@@ -185,13 +198,13 @@ public class tests {
         getExpectedExcelFormula = pair.getValue();
         pair = TestingUtils.getCompleteBipartiteVlookup(0, 0, UPPR, true);
         getExpectedLibreFormula = pair.getValue();
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, getExpectedExcelFormula, getExpectedLibreFormula);
+        this.runEmptyIntegrationTests(pair.getKey(), seed, getExpectedExcelFormula, getExpectedLibreFormula);
 
         pair = TestingUtils.getCompleteBipartiteVlookup(rows, cols, UPPR, false);
         getExpectedExcelFormula = pair.getValue();
         pair = TestingUtils.getCompleteBipartiteVlookup(rows, cols, UPPR, true);
         getExpectedLibreFormula = pair.getValue();
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, 1, 3, 42L, getExpectedExcelFormula, getExpectedLibreFormula);
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, 1, 3, seed, getExpectedExcelFormula, getExpectedLibreFormula);
     }
 
     @Test
@@ -202,6 +215,7 @@ public class tests {
 
     @Test
     public void testSingleCellVlookup () {
+        final long seed = 42;
         AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
         BiFunction<Integer, Integer, String> getExpectedExcelFormula;
         BiFunction<Integer, Integer, String> getExpectedLibreFormula;
@@ -210,13 +224,49 @@ public class tests {
         getExpectedExcelFormula = pair.getValue();
         pair = TestingUtils.getSingleCellVlookup(0, 0, UPPR, true);
         getExpectedLibreFormula = pair.getValue();
-        this.runEmptyIntegrationTests(pair.getKey(), 42L, getExpectedExcelFormula, getExpectedLibreFormula);
+        this.runEmptyIntegrationTests(pair.getKey(), seed, getExpectedExcelFormula, getExpectedLibreFormula);
 
         pair = TestingUtils.getSingleCellVlookup(rows, cols, UPPR, false);
         getExpectedExcelFormula = pair.getValue();
         pair = TestingUtils.getSingleCellVlookup(rows, cols, UPPR, true);
         getExpectedLibreFormula = pair.getValue();
-        this.runAllIntegrationTests(pair.getKey(), rows, rows, 1, 3, 42L, getExpectedExcelFormula, getExpectedLibreFormula);
+        this.runAllIntegrationTests(pair.getKey(), rows, rows, 1, 3, seed, getExpectedExcelFormula, getExpectedLibreFormula);
+    }
+
+    @Test
+    public void testSpecialOverlappingSum () {
+        final long seed = 42;
+        sums.specialsums.OverlappingSum.setMaxRows(EXCLUSIVE_UPPER_BOUND * 2);
+        AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
+        pair = TestingUtils.getSpecialOverlappingSum(rows, cols, UPPR, sums.specialsums.OverlappingSum.WINDOW_SZE, seed);
+        this.runAllIntegrationTests(pair.getKey(), rows, sums.specialsums.OverlappingSum.MAX_V_ROWS, cols, cols * 2, seed, pair.getValue());
+    }
+
+    @Test
+    public void testSpecialNoEdgeSum () {
+        final long seed = 42;
+        sums.specialsums.NoEdgeSum.setMaxRows(EXCLUSIVE_UPPER_BOUND * 2);
+        AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
+        pair = TestingUtils.getSpecialNoEdgeSum(rows, cols, UPPR, seed);
+        this.runAllIntegrationTests(pair.getKey(), rows, sums.specialsums.NoEdgeSum.MAX_V_ROWS, cols, cols * 2, seed, pair.getValue());
+    }
+
+    @Test
+    public void testSpecialMixedRangeSum () {
+        final long seed = 42;
+        sums.specialsums.MixedRangeSum.setMaxRows(EXCLUSIVE_UPPER_BOUND * 2);
+        AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
+        pair = TestingUtils.getSpecialMixedRangeSum(rows, cols, UPPR, seed);
+        this.runAllIntegrationTests(pair.getKey(), rows, sums.specialsums.MixedRangeSum.MAX_V_ROWS, cols, cols * 2, seed, pair.getValue());
+    }
+
+    @Test
+    public void testSpecialCompleteBipartiteSum () {
+        final long seed = 42;
+        sums.specialsums.CompleteBipartiteSum.setMaxRows(EXCLUSIVE_UPPER_BOUND * 2);
+        AbstractMap.SimpleEntry<Creatable, BiFunction<Integer, Integer, String>> pair;
+        pair = TestingUtils.getSpecialCompleteBipartiteSum(rows, cols, UPPR, seed);
+        this.runAllIntegrationTests(pair.getKey(), rows, sums.specialsums.CompleteBipartiteSum.MAX_V_ROWS, cols, cols * 2, seed, pair.getValue());
     }
 
 }

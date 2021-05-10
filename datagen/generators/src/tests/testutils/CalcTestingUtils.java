@@ -68,11 +68,11 @@ public class CalcTestingUtils extends TestingUtils {
         try {
 
             // Set up testing mocks
-            TableCell[][]   fCellMocks  = new TableCell[expectedRows][expectedCols];
-            TableCell[][]   vCellMocks  = new TableCell[expectedRows][expectedCols];
-            Creatable       createMock  = Mockito.spy(creatable);
-            Table           fSheetMock  = Mockito.mock(Table.class);
-            Table           vSheetMock  = Mockito.mock(Table.class);
+            TableCell[][]   fCellMocks = new TableCell[expectedRows][expectedCols];
+            TableCell[][]   vCellMocks = new TableCell[expectedRows][expectedCols];
+            Creatable       createMock = Mockito.spy(creatable);
+            Table           fSheetMock = Mockito.mock(Table.class);
+            Table           vSheetMock = Mockito.mock(Table.class);
             for (int r = 0; r < expectedRows; r++) {
                 TableRowImpl fRowMock = Mockito.mock(TableRowImpl.class);
                 TableRowImpl vRowMock = Mockito.mock(TableRowImpl.class);
@@ -94,21 +94,16 @@ public class CalcTestingUtils extends TestingUtils {
             }
 
             // Check function calls and parameters
-            for (int r = 0; r < rows; r++) {
-                
+            for (int r = 0; r < expectedRows; r++) {
                 // Each row should have only been accessed one time
                 Mockito.verify(fSheetMock, Mockito.times(1)).getRow(r);
                 Mockito.verify(vSheetMock, Mockito.times(1)).getRow(r);
-
-
                 for (int c = 0; c < cols; c++) {
-
                     // Each cell should have only been set one time
                     Mockito.verify(fCellMocks[r][c], Mockito.times(1)).setFloatValue(anyDouble());
                     Mockito.verify(vCellMocks[r][c], Mockito.times(1)).setFloatValue(anyDouble());
                     Mockito.verify(fCellMocks[r][c + cols], Mockito.times(1)).setFormula(getExpectedFormula.apply(r, c));
                     Mockito.verify(vCellMocks[r][c + cols], Mockito.times(1)).setFloatValue(anyDouble());
-
                 }
             }
 

@@ -133,7 +133,7 @@ public class ExcelTestingUtils extends TestingUtils {
         if (ct != CellType.ERROR) {
             double vVal = tryToGetNumericValue(vCell);
             double fVal = evaluator.evaluate(fCell).getNumberValue();
-            assertTrue(String.format("Value-only cell (%s=%f) does not match formula-value cell (%s=%f)",  vCell.getAddress(), vVal, fCell.getAddress(), fVal), vVal == fVal);
+            assertTrue(String.format("Value-only cell (%s=%f) does not match formula-value cell (%s=%f)", vCell.getAddress(), vVal, fCell.getAddress(), fVal), vVal == fVal);
         } else {
             if (fCell.getCellType() == CellType.FORMULA) {
                 System.out.println("WARNING: POI could not evaluate " + fCell.getCellFormula() + ". It is recommended to check this test case's sheet creator manually.");
@@ -151,8 +151,14 @@ public class ExcelTestingUtils extends TestingUtils {
     }
 
     private static void checkExcelFormulaCell (Cell cell, String expectedFormula) {
-        assertEquals("Formula not found at " + cell.getAddress(), cell.getCellType(), CellType.FORMULA);
-        assertEquals(expectedFormula, cell.getCellFormula());
+
+        // Special sums will have a mix of numeric cells and formula cells in one column, so this check is ignored
+        // assertEquals("Formula not found at " + cell.getAddress(), cell.getCellType(), CellType.FORMULA);
+        
+        if (cell.getCellType() == CellType.FORMULA) {
+            assertEquals(expectedFormula, cell.getCellFormula());
+        }
+
     }
 
 }
