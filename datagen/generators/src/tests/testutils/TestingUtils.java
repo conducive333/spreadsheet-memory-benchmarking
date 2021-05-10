@@ -6,8 +6,8 @@ import java.util.function.BiFunction;
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.Random;
+import java.util.Deque;
 import java.util.List;
 
 import java.nio.file.Path;
